@@ -172,6 +172,26 @@ exports.getNewsByID = function(newsid, callback){
 			callback(null,result);
 	});
 }
+
+//--------------------------------
+// Update like, share of news
+// Param newsid: id of news
+// Param callback: funtion callback
+//--------------------------------
+exports.updateLikeShare = function(newsid, like, share, add, callback){
+	newsDB.update({ _id : new ObjectID(newsid) }, 
+				  { $set : { like 	 : Number(like),
+							 share	 : Number(share),
+							 add	 : Number(add)
+						   } 
+				  },
+				  function(err,result){
+		if(err)
+			callback(err,'Can not update comment');
+		else
+			callback(null,result);
+	});
+}
 /*
 //--------------------------------
 // Get list recommend location

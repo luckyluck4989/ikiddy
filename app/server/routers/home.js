@@ -323,8 +323,26 @@ module.exports = function(app, nodeuuid){
 	// Update share, like, add
 	// Return: list location
 	//------------------------------------------------------------------
+	app.post('/updatenewslikeshare',function(req,res){
+		var input	= req.body;
+		var newsid	= input.newsid;
+		var like	= input.like;
+		var share	= input.share;
+		var add		= input.add;
 
-		//------------------------------------------------------------------
+		newsModel.updateLikeShare(newsid, like, share, add, function (err, retJson) {
+			if (err) {
+				var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_FAIL, SYSTEM_ERR, err, null)
+				res.json(jsonResult, 400);
+				return;
+			} else {
+				var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+				res.json(jsonResult,200);
+			}
+		});
+	});
+
+	//------------------------------------------------------------------
 	// Get location in admin
 	// Return: list location
 	//------------------------------------------------------------------
