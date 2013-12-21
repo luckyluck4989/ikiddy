@@ -1,0 +1,109 @@
+extends ../layout
+
+block content
+	#main-content
+		.row
+			.col-md-12
+				.box.box-black
+					.box-title
+						h3
+							i.icon-file
+							| List Location
+						.box-tool
+							a(data-action="collapse", href="#")
+								i.icon-chevron-up
+							a(data-action="close", href="#")
+								i.icon-remove
+					.box-content
+						.btn-toolbar.pull-right
+							.btn-group
+								a.btn.btn-circle.show-tooltip(title='', href='/location', data-original-title='Add new location')
+									i.icon-plus
+								a.btn.btn-circle.show-tooltip#updaterec(title='', href='#', data-original-title='Update Recommend')
+									i.icon-edit
+							.btn-group
+								a.btn.btn-circle.show-tooltip(title='', href='/listlocation', data-original-title='Refresh')
+									i.icon-repeat
+						br
+						br
+						.table-responsive
+							table.table.table-advance#locationtbl
+								thead
+									tr
+										th(style='width:18px')
+											input#chbAll(type='checkbox')
+										th Name Location
+										th Country
+										th City
+										th Recommend
+										th Like
+										th(style='display:none;')
+										th.visible-md.visible-lg(style='width:130px') Action
+								tbody
+									if(resultJson.result.length>0)
+										-	for(var i=0;i<resultJson.result.length;i++)
+											if(i%2 != 0)
+												tr
+													td
+														input.chblocation(type='checkbox')
+													td
+														a(href='#', class='locaid')= resultJson.result[i].namelocation
+													td= resultJson.result[i].country
+													td= resultJson.result[i].city
+													if resultJson.result[i].isrecommend=='true'
+														td
+															span.label.label-success Recommend
+													else
+														td 
+													td
+														span.label.label-success= resultJson.result[i].like
+													td#rowID(style='display:none;')= resultJson.result[i]._id
+													td.visible-md.visible-lg
+														.btn-group
+															a.btn.btn-sm.show-tooltip(title='', href='#', class='locaid', data-original-title='Edit')
+																i.icon-edit
+															a.btn.btn-sm.btn-danger.show-tooltip(title='', class='dellocaid', href='#', data-original-title='Delete')
+																i.icon-trash
+											else
+												tr.table-flag-blue
+													td
+														input.chblocation(type='checkbox')
+													td
+														a(href='#', class='locaid')= resultJson.result[i].namelocation
+													td= resultJson.result[i].country
+													td= resultJson.result[i].city
+													if resultJson.result[i].isrecommend=='true'
+														td
+															span.label.label-success Recommend
+													else
+														td 
+													td
+														span.label.label-success= resultJson.result[i].like
+													td#rowID(style='display:none;')= resultJson.result[i]._id
+													td.visible-md.visible-lg
+														.btn-group
+															a.btn.btn-sm.show-tooltip(title='', href='#' , class='locaid', data-original-title='Edit')
+																i.icon-edit
+															a.btn.btn-sm.btn-danger.show-tooltip(title='', href='#', class='dellocaid', data-original-title='Delete')
+																i.icon-trash
+						.text-center
+							ul.pagination#pagingid
+								li
+									a(href='#',id="prev") ← Prev
+								li
+									a(href='#',id="1") 1
+								li
+									a(href='#',id="2") 2
+								li.active
+									a(href='#',id="3") 3
+								li
+									a(href='#',id="4") 4
+								li
+									a(href='#',id="5") 5
+								li
+									a(href='#',id="6") 6
+								li
+									a(href='#',id="next") Next → 
+block scripts
+	script(src='/vendor/jquery.form.js')
+	script(src='/javascripts/listlocation.js')

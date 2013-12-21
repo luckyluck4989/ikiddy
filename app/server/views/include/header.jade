@@ -1,0 +1,26 @@
+#navbar.navbar
+	button.navbar-toggle.navbar-btn.collapsed(type='button', data-toggle='collapse', data-target='#sidebar')
+		span.icon-reorder
+	a.navbar-brand(href='#')
+		small
+			i.icon-desktop
+			|  ASTM Admin
+	ul.nav.flaty-nav.pull-right
+		li.user-profile
+			a.user-menu.dropdown-toggle(data-toggle='dropdown', href='#')
+				img.nav-user-photo(src='img/demo/avatar/avatar1.jpg', alt='Penny"s Photo')
+				span#user_info.hidden-sm
+					| Admin
+				i.icon-caret-down
+			ul#user_menu.dropdown-menu.dropdown-navbar
+				li.nav-header
+					i.icon-time
+					| Login Panel
+				li
+					a(href='/changepass')
+						i.icon-cog
+						| Change Password
+				li
+					a(href='/signout')
+						i.icon-off
+						| Logout

@@ -1,0 +1,25 @@
+extends ../layout
+
+block loginad
+	.login-page
+		.login-wrapper
+			form#form-login(action="/signin", method="POST", enctype="multipart/form-data", id="loginForm")
+				h3 Login to KIDDY
+				hr
+				.form-group
+					.controls
+						input.form-control(type='text', placeholder='Username', value ='admin', readonly='readonly',s id='user', name='txtUserName', tabindex='1')
+						span.help-block(for='email', style='color: #b94a48;display:none', id='invalidUserName') Please enter a valid Username.
+				.form-group
+					.controls
+						input.form-control(type='password', placeholder='Password', id='pass', name='txtPassword', tabindex='2')
+						span.help-block(for='email', style='color: #b94a48;display:none', id='invalidPassword') Please enter a valid Password.
+				.form-group
+					.controls
+						button.btn.btn-primary.form-control(type='submit',id = "btnLogin", tabindex='4') Sign In
+				hr
+block scripts
+	//script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+	script(src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places")
+	script(src='/vendor/jquery.form.js')
+	script(src='/javascripts/loginad.js')

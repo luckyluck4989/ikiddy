@@ -1,0 +1,57 @@
+extends ../layout
+
+block content
+	#main-content
+		.row
+			.col-md-12
+				.box.box-orange
+					.box-title
+						h3
+							i.icon-file
+							| Edit News
+						.box-tool
+							a(data-action="collapse", href="#")
+								i.icon-chevron-up
+							a(data-action="close", href="#")
+								i.icon-remove
+					.box-content
+						form(action="/addnews", class="form-horizontal", method="POST", enctype="multipart/form-data", id="addNewsForm")
+							.form-group
+								label.col-sm-3.col-lg-2.control-label Title
+								.col-sm-9.col-lg-10.controls
+									input.form-control#title(type='text', value='', name ="title", tabindex='1')
+									input.form-control#typeSubmit(style='display:none;', type='text', value='Jack', name ="typeSubmit")
+									input.form-control#newsid(style='display:none;', type='text', value=newsid, name ="newsid")
+							.form-group
+								label.col-sm-3.col-lg-2.control-label Category
+								.col-sm-9.col-lg-10.controls
+									select#category.form-control.chosen.chzn-done(data-placeholder='Choose a country', tabindex='2', style='', name ="category")
+							.form-group
+								label.col-sm-3.col-lg-2.control-label Subcategory
+								.col-sm-9.col-lg-10.controls
+									select#subcategory.form-control.chosen.chzn-done(data-placeholder='Choose a country', tabindex='3', style='', name = "subcategory")
+							.form-group
+								label.col-sm-3.col-lg-2.control-label Content
+								.col-sm-9.col-lg-10.controls
+									textarea.form-control#content(rows='6', name = "content", tabindex='4')
+							.form-group
+								label.col-sm-3.col-lg-2.control-label
+								.col-sm-9.col-lg-10.controls
+									#imageloadstatus(style='display: none;')
+										img(src='/images/loader.gif', alt='Uploading....')
+									#imageloadbutton
+										input#photoimg(type='file', name='photos[]', multiple='true', tabindex='5')
+							.form-group
+								label.col-sm-3.col-lg-2.control-label
+								.col-sm-9.col-lg-10.controls
+									#listImage
+							.form-group
+								label.col-sm-3.col-lg-2.control-label
+								.col-sm-9.col-lg-10.controls
+									button.btn.btn-primary(type='submit',id = "btnSave", tabindex='8') Submit
+									button.btn(type='button', id = "btnCancel", tabindex='9') Cancel
+block scripts
+	//script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+	script(src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places")
+	script(src='/vendor/jquery.form.js')
+	script(src='/javascripts/news.js')

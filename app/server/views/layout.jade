@@ -1,0 +1,35 @@
+doctype 5
+html
+	head
+	- if (typeof(title) == 'undefined')
+		title Express Starter Template
+	- else 
+		title= title
+	<link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/stylesheets/flaty.css">
+	<link rel="stylesheet" href="/stylesheets/flaty-responsive.css">
+	
+	script(src='/vendor/jquery.min.js')
+	script(src='/vendor/jquery.form.js')
+	script(src='/vendor/jquery.cookie.js')
+	script(src='/vendor/jquery.flot.js')
+	script(src='/vendor/jquery.flot.pie.js')
+	script(src='/vendor/jquery.flot.resize.js')
+	script(src='/vendor/jquery.flot.stack.js')
+	script(src='/vendor/jquery.flot.tooltip.min.js')
+	script(src='/vendor/jquery.nicescroll.min.js')
+	script(src='/vendor/jquery.sparkline.min.js')
+	script(src='/vendor/bootstrap.min.js')
+	script(src='/vendor/flaty.js')
+body
+	- if(path === '/loginad')
+		block loginad
+		block scripts
+	- else
+		include include/header
+		#main-container.container
+			include include/sidebar
+			#main-content
+				block content
+				block scripts
