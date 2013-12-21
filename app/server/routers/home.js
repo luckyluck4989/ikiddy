@@ -343,9 +343,21 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//------------------------------------------------------------------
-	// Get location in admin
+	// Count like by group info new
 	// Return: list location
 	//------------------------------------------------------------------
+	app.get('/gettotalnewsinfo',function(req,res){
+		newsModel.getTotalNewsInfo(function (err, retJson) {
+			if (err) {
+				var jsonResult = createJsonResult('GetTotalNewsInfo', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+				res.json(jsonResult, 400);
+				return;
+			} else {
+				var jsonResult = createJsonResult('GetTotalNewsInfo', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+				res.json(jsonResult,200);
+			}
+		});
+	});
 
 	//------------------------------------------------------------------
 	// Get location in admin

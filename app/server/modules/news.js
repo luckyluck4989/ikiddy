@@ -192,6 +192,31 @@ exports.updateLikeShare = function(newsid, like, share, add, callback){
 			callback(null,result);
 	});
 }
+
+//--------------------------------
+// Count category
+// Param callback: funtion callback
+//--------------------------------
+exports.getTotalNewsInfo = function(callback){
+	newsDB.aggregate( [
+		{ $match: { categoryid	: "1"  } },
+		{ $group: { _id			: { subcategoryid	: "$subcategoryid",
+								    subcategoryname	: "$subcategoryname"
+								},
+					sum_like	: { $sum: "$like" },
+					sum_share	: { $sum: "$share" }, 
+					sum_add		: { $sum: "$add" } 
+				  } 
+		},
+		{ $sort: { _id: 1 } }
+	], function(err,resultSystem){
+		if(err){
+			callback(err,'Can not add log history');
+		} else {
+			callback(null,resultSystem);
+		}
+	});
+}
 /*
 //--------------------------------
 // Get list recommend location
