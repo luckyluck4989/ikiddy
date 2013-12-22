@@ -7,7 +7,7 @@ var logModel = require('../modules/logcollect')
 var crypto = require('crypto')
 
 //--------------------------------
-// Define Variable
+// Define Variable 
 //--------------------------------
 var SYSTEM_ERR = 'ERROR';
 var SYSTEM_SUC = 'SUCESS';
