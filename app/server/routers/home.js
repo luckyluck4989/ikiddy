@@ -347,14 +347,33 @@ module.exports = function(app, nodeuuid){
 	// Return: list location
 	//------------------------------------------------------------------
 	app.get('/gettotalnewsinfo',function(req,res){
-		newsModel.getTotalNewsInfo(function (err, retJson) {
+		// CODE DEFINE
+		// 1: Info Product
+		// 2: Info Calo
+		// 3: Info Tips
+		var code = req.param('code');
+		newsModel.getTotalNewsInfo(code, function (err, retJson) {
 			if (err) {
 				var jsonResult = createJsonResult('GetTotalNewsInfo', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
 				res.json(jsonResult, 400);
 				return;
 			} else {
-				var jsonResult = createJsonResult('GetTotalNewsInfo', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
-				res.json(jsonResult,200);
+				cateModel.getAllCategoryByCode(code, function (err, retJsonCate) {
+					if (err) {
+						var jsonResult = createJsonResult('GetAllCategoryByCode', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+						res.json(jsonResult, 400);
+						return;
+					} else {
+						for(var i = 0; i < retJsonCate.length; i++){
+							if( retJsonCate[i] != undefined ){
+								retJson[i].name = retJsonCate[i].subcategoryname;
+								retJson[i].image = retJsonCate[i].image;
+							}
+						}
+						var jsonResult = createJsonResult('GetTotalNewsInfo', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+						res.json(jsonResult,200);
+					}
+				});
 			}
 		});
 	});

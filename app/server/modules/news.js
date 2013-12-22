@@ -11,7 +11,7 @@ var FormData = require('form-data'); //Pretty multipart form maker.
 // VAO APP -> EDIT SETTINGS -> CLICK VAO "Graph API Explorer"
 // COPY ID CUA APPS, DAN LEN DUONG DAN VA RUN
 //---------------------------------------------------------------
-var ACCESS_TOKEN = "CAAICtp62IZBgBAE8mQ7FD85pLqMdxMOrJ1Ogo3VSy9GJnRl4E9Tu8YHR1EbwmDUOTK0kX6G3ctZAGfJNzb0yMrTujnh2PmWOKMZAioe736GZBnDptgekbpnusPkwHdKTSZB0FLUbtyVkBZAJgqPeZCZA1ZAthHX01yG6HuyoIBdZCf422qXdIw0qzuS5IyesOW3BaSYDZBfl2xJZCgZDZD";
+var ACCESS_TOKEN = "CAAICtp62IZBgBAHXmUJTZCDHfCdilbQz6XfZCKPe6j9E70NDyYYhKLsEZBSolZAF6MvZBtzff3WgBfIu4JSBu5iTZCZC3o3m9ZACvTodEZCQ7SNIZCG6PTZAWrBZBMCN7wj1wixbza8p9l51BTdEjv1Dau71zVHlijv0IYsUub47nF1FgWmmgYrzcWKZAdNZBP2ByZBrn6cZD";
 
 //--------------------------------
 // Function Add Image
@@ -197,12 +197,10 @@ exports.updateLikeShare = function(newsid, like, share, add, callback){
 // Count category
 // Param callback: funtion callback
 //--------------------------------
-exports.getTotalNewsInfo = function(callback){
+exports.getTotalNewsInfo = function(code, callback){
 	newsDB.aggregate( [
-		{ $match: { categoryid	: "1"  } },
-		{ $group: { _id			: { subcategoryid	: "$subcategoryid",
-								    subcategoryname	: "$subcategoryname"
-								},
+		{ $match: { categoryid	: code  } },
+		{ $group: { _id			: "$subcategoryid",
 					sum_like	: { $sum: "$like" },
 					sum_share	: { $sum: "$share" }, 
 					sum_add		: { $sum: "$add" } 
