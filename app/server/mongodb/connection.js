@@ -5,9 +5,9 @@ var moment 		= require('moment');
 var moment 		= require('moment');
 var ObjectID	= require('mongodb').ObjectID;
 
-var dbPort 		= 10000; //27017;
-var dbHost 		= 'widmore.mongohq.com';//'localhost';
-var dbName 		= 'kiddydb';
+var dbPort 		= 10066; //27017;
+var dbHost 		= 'dharma.mongohq.com';//'localhost';
+var dbName 		= 'ikiddydb';
 var mongo_db_username = 'luckyluck4989';
 var mongo_db_password = '242497621176Luck';
 
