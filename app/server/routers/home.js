@@ -70,7 +70,7 @@ module.exports = function(app, nodeuuid){
 	//------------------------------------------------------------------
 	app.get('/',function(req,res){
 		if(req.session.user != undefined){
-			res.redirect('/listlocation');
+			res.redirect('/listnewsch');
 		} else {
 			// path : use for show view is login or home page
 			res.redirect('/loginad');
