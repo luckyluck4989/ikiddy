@@ -4,9 +4,17 @@
 			form.search-form(target='#', method='GET')
 				span.search-pan
 		li
-			a(href='/listlocation')
+			a.dropdown-toggle(href='#')
 				i.icon-desktop
-				span List Location
+				span Thông tin và tin tức
+				b.arrow.icon-angle-right
+			ul.submenu
+				li
+					a(href='/listnewsch') Thông tin sản phẩm
+				li
+					a(href='/listcity') Thông tin dinh dưỡng
+				li
+					a(href='/listcity') Tips chăm sóc bé
 		li
 			a.dropdown-toggle(href='#')
 				i.icon-edit

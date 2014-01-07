@@ -43,6 +43,27 @@ function createJsonResult(func,mthod,stt,msg,err,res){
 	return jsonResult;
 }
 
+//--------------------------------
+// VALIDATE PARAMETER
+// value: value of parameter
+// type: type of parameter
+// Return: json result
+//--------------------------------
+function validateParam(value, type){
+	// TYPE 1 : OBJECTID
+	if( type == 1){
+		if( value == null){
+			return "Locationid is null !";
+		} else if(value.length != 24){
+			return "Length of locationid is not valid !";
+		} else {
+			return "";
+		}
+	} else {
+		return "";
+	}
+}
+
 module.exports = function(app, nodeuuid){
 	//------------------------------------------------------------------
 	// ADMIN
@@ -64,52 +85,84 @@ module.exports = function(app, nodeuuid){
 	// Get list location page = 1
 	// Return: render location page
 	//------------------------------------------------------------------
-	/*
-	app.get('/listlocation',function(req,res){
+	app.get('/listnewsch',function(req,res){
 		if(req.session.user != null){
-			var page = 1;
-			var offset = 10;
-			locationModel.getListLocation(page, offset, function (err, retJson) {
-				if (err) {
-					var jsonResult = createJsonResult('GetLocation', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
-					res.json(jsonResult, 400);
-					return;
-				} else {
-					var jsonResult = createJsonResult('GetLocation', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
-					res.render('block/listlocation', { title: 'List Location', path : req.path, resultJson : jsonResult });
-				}
-			});
+			var jsonResult = createJsonResult('GetListNewsCH', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, null);
+			jsonResult.subcate = req.session.subcate;
+			res.render('block/listnewsch', { title: 'List News', path : req.path, resultJson : jsonResult });
 		} else {
 			res.redirect('/loginad');
 		}
 	});
-	*/
 
 	//------------------------------------------------------------------
 	// Get list location by page
 	// Return: list location
 	//------------------------------------------------------------------
-	/*
-	app.post('/listlocation',function(req,res){
+	app.post('/listnewsch',function(req,res){
 		if(req.session.user != null){
 			var input = req.body;
 			var page = input.page;
+			var subcategory = input.subcate;
 			var offset = 10;
-			locationModel.getListLocation(page, offset, function (err, retJson) {
+			if(input.subcate == 0)
+				subcategory = req.session.subcate;
+			if(input.subcate != 0)
+				req.session.subcate = input.subcate;
+			newsModel.getListNewsCH(subcategory, page, offset, function (err, retJson) {
 				if (err) {
-					var jsonResult = createJsonResult('GetLocation', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					var jsonResult = createJsonResult('GetListNewsCH', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
 					res.json(jsonResult, 400);
 					return;
 				} else {
-					var jsonResult = createJsonResult('GetLocation', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
-					res.json(jsonResult, 200);
+					newsModel.getCountListNewsCH(subcategory, function (err, retJsonCount) {
+						var jsonResult = createJsonResult('GetListNewsCH', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+						jsonResult.result2 = retJsonCount;
+						res.json(jsonResult, 200);
+					});
 				}
 			});
 		} else {
 			res.redirect('/loginad');
 		}
 	});
-	*/
+
+	//------------------------------------------------------------------
+	// Set news to session
+	// Return: list news
+	//------------------------------------------------------------------
+	app.post('/admnews',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			req.session.newsid = input.newsid;
+			res.json(req.session.user, 200);
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//--------------------------------
+	// Delete News
+	// Return: Delete News
+	//--------------------------------
+	app.post('/delnews',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var newsid = input.newsid;
+			newsModel.deleteNews(newsid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Delete News', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('Delete News', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+					res.json(jsonResult,200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
 
 	//------------------------------------------------------------------
 	// Render view login
@@ -180,8 +233,8 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//------------------------------------------------------------------
-	// Get location in admin
-	// Return: list location
+	// Get news in admin
+	// Return: list news
 	//------------------------------------------------------------------
 	app.get('/news',function(req,res){
 		if(req.session.user != null){
@@ -190,6 +243,30 @@ module.exports = function(app, nodeuuid){
 			} else {
 				res.render('block/news', { title: 'Location', path: req.path, newsid : null });
 			}
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Set location to session
+	// Return: list location
+	//------------------------------------------------------------------
+	app.post('/getadmnews',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var newsid = input.newsid;
+			newsModel.getNewsByID(newsid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Get News', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					req.session.newsid = null;
+					var jsonResult = createJsonResult('Get News', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult, 200);
+				}
+			});
 		} else {
 			res.redirect('/loginad');
 		}
@@ -307,16 +384,24 @@ module.exports = function(app, nodeuuid){
 	//------------------------------------------------------------------
 	app.get('/getnewsbyid',function(req,res){
 		var newsid = req.param('newsid');
-		newsModel.getNewsByID(newsid, function (err, retJson) {
-			if (err) {
-				var jsonResult = createJsonResult('GetNewsByID', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
-				res.json(jsonResult, 400);
-				return;
-			} else {
-				var jsonResult = createJsonResult('GetNewsByID', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
-				res.json(jsonResult,200);
-			}
-		});
+
+		// Validate locationid
+		var errmsg = validateParam(newsid.toString(),1);
+		if(errmsg != ""){
+			var jsonResult = createJsonResult('GetNewsByID', METHOD_POS, STATUS_FAIL, SYSTEM_ERR, errmsg, null)
+			res.json(jsonResult, 400);
+		} else {
+			newsModel.getNewsByID(newsid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetNewsByID', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('GetNewsByID', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult,200);
+				}
+			});
+		}
 	});
 
 	//------------------------------------------------------------------
@@ -330,16 +415,23 @@ module.exports = function(app, nodeuuid){
 		var share	= input.share;
 		var add		= input.add;
 
-		newsModel.updateLikeShare(newsid, like, share, add, function (err, retJson) {
-			if (err) {
-				var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_FAIL, SYSTEM_ERR, err, null)
-				res.json(jsonResult, 400);
-				return;
-			} else {
-				var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
-				res.json(jsonResult,200);
-			}
-		});
+		// Validate locationid
+		var errmsg = validateParam(newsid.toString(),1);
+		if(errmsg != ""){
+			var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_FAIL, SYSTEM_ERR, errmsg, null)
+			res.json(jsonResult, 400);
+		} else {
+			newsModel.updateLikeShare(newsid, like, share, add, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult,200);
+				}
+			});
+		}
 	});
 
 	//------------------------------------------------------------------
@@ -381,5 +473,11 @@ module.exports = function(app, nodeuuid){
 	//------------------------------------------------------------------
 	// Get location in admin
 	// Return: list location
+	//------------------------------------------------------------------
+	
+	
+	//------------------------------------------------------------------
+	// Get news by id
+	// Return: news
 	//------------------------------------------------------------------
 };

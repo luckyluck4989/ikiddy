@@ -7,6 +7,7 @@ var input;
 var autocomplete;
 var infowindow;
 var oldJson;
+var arrCate,arrSubCate;
 $(document).ready(function() {
 	$("#title").focus();
 
@@ -25,53 +26,41 @@ $(document).ready(function() {
 						text : item.categoryname 
 					}));
 				});
+				arrCate = data.result;
 
 				$('#subcategory')[0].options.length = 0;
 				// Draw data subcategory
+				/*
 				$.each(data.resultsub, function (i, item) {
 					$('#subcategory').append($('<option>', { 
 						value: item.subcategoryid,
 						text : item.subcategoryname 
 					}));
 				});
+				*/
+				arrSubCate = data.resultsub;
 
 				if($("#newsid").val() != ''){
 					// Call ajax to get location
 					var input = {"newsid" : $("#newsid").val()};
 					$.ajax({
-						url: '/getadmlocation',
+						url: '/getadmnews',
 						type: 'POST',
 						data: input,
 						success: function(data){
 							if(data.result){
 								// Draw data
 								oldJson = data.result;
-								$("#namelocation").val(data.result.namelocation);
-								$("#country").val(data.result.country);
-								$("#city").val(data.result.city);
-								$("#description").val(data.result.description);
-								$("#searchTextField").val(data.result.address);
-								if(data.result.isrecommend == 'true' )
-									$("#isrecommend").attr('checked',true);
-								else
-									$("#isrecommend").attr('checked',false);
+								$("#title").val(data.result.title);
+								$("#category").val(data.result.categoryid);
+								filerCategory(data.result.categoryid);
+								$("#subcategory").val(data.result.subcategoryid);
+								$("#content").val(data.result.content);
 
 								// Draw image
-								for(var i =0; i< data.result.imagelist.length; i++){
-									var img = '<img width="200px" height="auto" src="'+ data.result.imagelist[i] +'">';
-									$('#listImage').append(img);
-								}
-								if(data.result.imagelist.length > 0)
-									arrImage = data.result.imagelist;
-
-								map.setCenter(new google.maps.LatLng(data.result.coordinate[0], data.result.coordinate[1]));
-								map.setZoom(17);	// Why 17? Because it looks good.
-
-								marker = new google.maps.Marker({
-									map: map,
-									position: new google.maps.LatLng(data.result.coordinate[0], data.result.coordinate[1])
-								});
-
+								var img = '<img width="200px" height="auto" src="'+ data.result.image +'">';
+								$('#listImage').append(img);
+								arrImage[0] = img;
 							}
 						},
 						error: function(jqXHR){
@@ -91,6 +80,12 @@ $(document).ready(function() {
 		}
 	});
 
+	// select category change
+	$("#category").change(function(){
+		var myselect = document.getElementById("category");
+		filerCategory(myselect.options[myselect.selectedIndex].value);
+	});
+
 	// upload image review place
 	$("#btnSave").click(function(e){
 		if($("#listImage img").length == 0){
@@ -105,7 +100,7 @@ $(document).ready(function() {
 					formData.push({name:"subcategoryname", value:$("#subcategory option:selected").text()});
 				},
 				success	: function(responseText, status, xhr, $form){
-					window.location.href = '/listlocation';
+					window.location.href = '/listnewsch';
 				},
 				error : function(e){
 					alert(e.responseText);
@@ -148,6 +143,20 @@ $(document).ready(function() {
 
 	// Cancel button click
 	$("#btnCancel").click(function(e){
-		window.location.href = '/listlocation';
+		window.location.href = '/listnewsch';
 	});
 });
+
+function filerCategory(cateid){
+		$('#subcategory')[0].options.length = 0;
+	// Draw data subcategory
+	$.each(arrSubCate, function (i, item) {
+		if(item.categoryid == cateid)
+		{
+			$('#subcategory').append($('<option>', { 
+				value: item.subcategoryid,
+				text : item.subcategoryname 
+			}));
+		}
+	});
+}

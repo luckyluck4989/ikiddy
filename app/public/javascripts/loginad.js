@@ -9,7 +9,7 @@ $(document).ready(function(){
 				if(responseText.status == 200){
 					//$('#invalidUserName').css('display','none');
 					$('#invalidUserName').css('display','none');
-					window.location.href = '/news';
+					window.location.href = '/listnewsch';
 				} else {
 					//$('#invalidUserName').css('display','');
 					$('#invalidPassword').css('display','');
