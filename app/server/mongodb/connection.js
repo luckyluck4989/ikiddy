@@ -34,6 +34,7 @@ module.exports = {
 		category:db.collection('category'),
 		subcategory:db.collection('subcategory'),
 		news:db.collection('news'),
+		food:db.collection('food'),
 		crypto:crypto,
 		ObjectID:ObjectID,
 		moment:moment 

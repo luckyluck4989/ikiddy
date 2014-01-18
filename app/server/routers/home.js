@@ -1,5 +1,6 @@
 var accountModel = require('../modules/account')
 var newsModel = require('../modules/news')
+var foodModel = require('../modules/food')
 var imageModel = require('../modules/image')
 var userHistoryModel = require('../modules/userhistory')
 var cateModel = require('../modules/category')
@@ -53,9 +54,9 @@ function validateParam(value, type){
 	// TYPE 1 : OBJECTID
 	if( type == 1){
 		if( value == null){
-			return "Locationid is null !";
+			return "Id is null !";
 		} else if(value.length != 24){
-			return "Length of locationid is not valid !";
+			return "Length of id is not valid !";
 		} else {
 			return "";
 		}
@@ -82,14 +83,27 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//------------------------------------------------------------------
-	// Get list location page = 1
-	// Return: render location page
+	// Get list info new page = 1
+	// Return: render info news page
 	//------------------------------------------------------------------
 	app.get('/listnewsch',function(req,res){
 		if(req.session.user != null){
 			var jsonResult = createJsonResult('GetListNewsCH', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, null);
 			jsonResult.subcate = req.session.subcate;
 			res.render('block/listnewsch', { title: 'List News', path : req.path, resultJson : jsonResult });
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get list 365 page = 1
+	// Return: render 365 list page
+	//------------------------------------------------------------------
+	app.get('/listm365',function(req,res){
+		if(req.session.user != null){
+			var jsonResult = createJsonResult('GetList365', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, null);
+			res.render('block/listm365', { title: 'List 365 Food', path : req.path, resultJson : jsonResult });
 		} else {
 			res.redirect('/loginad');
 		}
@@ -117,6 +131,33 @@ module.exports = function(app, nodeuuid){
 				} else {
 					newsModel.getCountListNewsCH(subcategory, function (err, retJsonCount) {
 						var jsonResult = createJsonResult('GetListNewsCH', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+						jsonResult.result2 = retJsonCount;
+						res.json(jsonResult, 200);
+					});
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get list 365 food by page
+	// Return: list 365 food
+	//------------------------------------------------------------------
+	app.post('/listm365',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var page = input.page;
+			var offset = 10;
+			foodModel.getList365Food(page, offset, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetList365', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					foodModel.getCountList365Food(function (err, retJsonCount) {
+						var jsonResult = createJsonResult('GetList365', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
 						jsonResult.result2 = retJsonCount;
 						res.json(jsonResult, 200);
 					});
@@ -156,6 +197,43 @@ module.exports = function(app, nodeuuid){
 					return;
 				} else {
 					var jsonResult = createJsonResult('Delete News', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+					res.json(jsonResult,200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Set foods to session
+	// Return: list news
+	//------------------------------------------------------------------
+	app.post('/admm365',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			req.session.foodid = input.itemid;
+			res.json(req.session.user, 200);
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//--------------------------------
+	// Delete Food
+	// Return: Delete Food
+	//--------------------------------
+	app.post('/delm365',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var foodid = input.itemid;
+			foodModel.deleteFood(foodid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Delete Food', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('Delete Food', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
 					res.json(jsonResult,200);
 				}
 			});
@@ -249,6 +327,22 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//------------------------------------------------------------------
+	// Get food in admin
+	// Return: list food
+	//------------------------------------------------------------------
+	app.get('/m365',function(req,res){
+		if(req.session.user != null){
+			if(req.session.foodid != null){
+				res.render('block/m365', { title: 'Food', path: req.path, itemid : req.session.foodid });
+			} else {
+				res.render('block/m365', { title: 'Food', path: req.path, itemid : null });
+			}
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
 	// Set location to session
 	// Return: list location
 	//------------------------------------------------------------------
@@ -264,6 +358,30 @@ module.exports = function(app, nodeuuid){
 				} else {
 					req.session.newsid = null;
 					var jsonResult = createJsonResult('Get News', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult, 200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Set foodid to session
+	// Return: list foods
+	//------------------------------------------------------------------
+	app.post('/getadmm365',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var foodid = input.itemid;
+			foodModel.getFoodByID(foodid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Get Food', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					req.session.foodid = null;
+					var jsonResult = createJsonResult('Get Food', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
 					res.json(jsonResult, 200);
 				}
 			});
@@ -324,6 +442,67 @@ module.exports = function(app, nodeuuid){
 		//--------------------------------
 		} else {
 			newsModel.addNews(input, function (err, objects) {
+				if (err) {
+					res.json(err, 400);
+					return;
+				} else {
+					res.json("Success",200);
+				}
+			});
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Add new food
+	// Return: food added
+	//------------------------------------------------------------------
+	app.post('/addm365',function(req,res){
+		//--------------------------------
+		// Define parameter
+		//--------------------------------
+		var arr = [];
+		var input = req.body;
+
+		//--------------------------------
+		// Case: Upload image
+		//--------------------------------
+		if(input.typeSubmit == 'uploadImage'){
+			if (!input.name) {
+				res.json("name must be specified when saving a new article", 400);
+				return;
+			}
+
+			// Upload multi images
+			if(req.files.photos[0].path == undefined){
+				for(var i=0; i < req.files.photos[0].length; i++){
+					// Call function upload images
+					foodModel.addImage(input, req.files.photos[0][i], function (err, objects) {
+						if (err) {
+							res.json(err, 400);
+							return;
+						} else {
+							arr.push(objects);
+						}
+					});
+				}
+			// Upload only one images
+			} else {
+				foodModel.addImage(input, req.files.photos[0], function (err, objects) {
+					if (err) {
+						res.json(err, 400);
+						return;
+					} else {
+						arr.push(objects);
+					}
+				});
+			}
+			res.json(arr,200);
+
+		//--------------------------------
+		// Case: Entry data
+		//--------------------------------
+		} else {
+			foodModel.addItem(input, function (err, objects) {
 				if (err) {
 					res.json(err, 400);
 					return;
@@ -471,11 +650,76 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//------------------------------------------------------------------
-	// Get location in admin
-	// Return: list location
+	// Get list 365 food
+	// Return: list food
 	//------------------------------------------------------------------
-	
-	
+	app.get('/getall365food',function(req,res){
+		foodModel.getAll365Food(function (err, retJson) {
+			if (err) {
+				var jsonResult = createJsonResult('Getlist365food', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+				res.json(jsonResult, 400);
+				return;
+			} else {
+				var jsonResult = createJsonResult('Getlist365food', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+				res.json(jsonResult,200);
+			}
+		});
+	});
+	//------------------------------------------------------------------
+	// Get food
+	// Return: food
+	//------------------------------------------------------------------
+	app.get('/getfoodbyid',function(req,res){
+		var foodid = req.param('foodid');
+
+		// Validate locationid
+		var errmsg = validateParam(foodid.toString(),1);
+		if(errmsg != ""){
+			var jsonResult = createJsonResult('GetFoodByID', METHOD_POS, STATUS_FAIL, SYSTEM_ERR, errmsg, null)
+			res.json(jsonResult, 400);
+		} else {
+			foodModel.getFoodByID(foodid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetFoodByID', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('GetFoodByID', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult,200);
+				}
+			});
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Update like and share food
+	// Return: food
+	//------------------------------------------------------------------
+	app.post('/updatefoodlikeshare',function(req,res){
+		var input	= req.body;
+		var foodid	= input.foodid;
+		var like	= input.like;
+		var share	= input.share;
+
+		// Validate locationid
+		var errmsg = validateParam(foodid.toString(),1);
+		if(errmsg != ""){
+			var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_FAIL, SYSTEM_ERR, errmsg, null)
+			res.json(jsonResult, 400);
+		} else {
+			foodModel.updateLikeShare(foodid, like, share, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult,200);
+				}
+			});
+		}
+	});
+
 	//------------------------------------------------------------------
 	// Get news by id
 	// Return: news

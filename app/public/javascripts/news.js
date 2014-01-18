@@ -60,7 +60,7 @@ $(document).ready(function() {
 								// Draw image
 								var img = '<img width="200px" height="auto" src="'+ data.result.image +'">';
 								$('#listImage').append(img);
-								arrImage[0] = img;
+								arrImage[0] = data.result.image;
 							}
 						},
 						error: function(jqXHR){
