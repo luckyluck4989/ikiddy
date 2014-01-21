@@ -7,7 +7,7 @@ $(document).ready(function() {
 	$($('#pagingid  li')[1]).addClass('active')
 
 	$.ajax({
-		url: '/listm365',
+		url: '/listvideo',
 		type: 'POST',
 		data: {"page" : 1},
 		success: function(data){
@@ -37,6 +37,7 @@ function drawData(dataJson){
 			tmpRow = '	<tr class="table-flag-blue">';
 		tmpRow += '			<td></td>'
 		tmpRow += '			<td><a href="#" class="itemid">' + dataJson[i].name + '</a></td>'
+		tmpRow += '			<td><span>' + dataJson[i].videocate + '</span></td>'
 		tmpRow += '			<td><span class="label label-success">' + dataJson[i].like + '</span></td>'
 		tmpRow += '			<td><span class="label label-success">' + dataJson[i].share + '</span></td>'
 		tmpRow += '			<td id="rowID" style="display:none;">' + dataJson[i]._id + '</td>';
@@ -62,12 +63,12 @@ function drawData(dataJson){
 		// Call ajax to get location
 		var input = {"itemid" : itemid};
 		$.ajax({
-			url: '/admm365',
+			url: '/admvideo',
 			type: 'POST',
 			data: input,
 			success: function(data){
 				if(data){
-					window.location.href = '/m365';
+					window.location.href = '/video';
 				}
 			},
 			error: function(jqXHR){
@@ -86,12 +87,12 @@ function drawData(dataJson){
 		// Call ajax to get location
 		var input = {"itemid" : itemid};
 		$.ajax({
-			url: '/delm365',
+			url: '/delvideo',
 			type: 'POST',
 			data: input,
 			success: function(data){
 				if(data){
-					window.location.href = '/listm365';
+					window.location.href = '/listvideo';
 				}
 			},
 			error: function(jqXHR){
@@ -166,7 +167,7 @@ function splitPage(total){
 		curPage = idActive;
 		var input = {"page" : idActive};
 		$.ajax({
-			url: '/listm365',
+			url: '/listvideo',
 			type: 'POST',
 			data: input,
 			success: function(data){

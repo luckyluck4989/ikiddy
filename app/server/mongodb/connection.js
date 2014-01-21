@@ -35,6 +35,10 @@ module.exports = {
 		subcategory:db.collection('subcategory'),
 		news:db.collection('news'),
 		food:db.collection('food'),
+		videocate:db.collection('videocategory'),
+		video:db.collection('video'),
+		learncate:db.collection('learncate'),
+		learn:db.collection('learn'),
 		crypto:crypto,
 		ObjectID:ObjectID,
 		moment:moment 

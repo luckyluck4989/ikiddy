@@ -7,7 +7,7 @@ $(document).ready(function() {
 	$($('#pagingid  li')[1]).addClass('active')
 
 	$.ajax({
-		url: '/listm365',
+		url: '/listlearncate',
 		type: 'POST',
 		data: {"page" : 1},
 		success: function(data){
@@ -37,8 +37,6 @@ function drawData(dataJson){
 			tmpRow = '	<tr class="table-flag-blue">';
 		tmpRow += '			<td></td>'
 		tmpRow += '			<td><a href="#" class="itemid">' + dataJson[i].name + '</a></td>'
-		tmpRow += '			<td><span class="label label-success">' + dataJson[i].like + '</span></td>'
-		tmpRow += '			<td><span class="label label-success">' + dataJson[i].share + '</span></td>'
 		tmpRow += '			<td id="rowID" style="display:none;">' + dataJson[i]._id + '</td>';
 		tmpRow += '			<td class="visible-md visible-lg">'
 		tmpRow += '				<div class="btn-group">'
@@ -62,12 +60,12 @@ function drawData(dataJson){
 		// Call ajax to get location
 		var input = {"itemid" : itemid};
 		$.ajax({
-			url: '/admm365',
+			url: '/admlearncate',
 			type: 'POST',
 			data: input,
 			success: function(data){
 				if(data){
-					window.location.href = '/m365';
+					window.location.href = '/learncate';
 				}
 			},
 			error: function(jqXHR){
@@ -86,12 +84,12 @@ function drawData(dataJson){
 		// Call ajax to get location
 		var input = {"itemid" : itemid};
 		$.ajax({
-			url: '/delm365',
+			url: '/dellearncate',
 			type: 'POST',
 			data: input,
 			success: function(data){
 				if(data){
-					window.location.href = '/listm365';
+					window.location.href = '/listlearncate';
 				}
 			},
 			error: function(jqXHR){

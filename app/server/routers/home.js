@@ -1,6 +1,9 @@
 var accountModel = require('../modules/account')
 var newsModel = require('../modules/news')
 var foodModel = require('../modules/food')
+var videoModel = require('../modules/video')
+var videoCateModel = require('../modules/videocate')
+var learnCateModel = require('../modules/learncate')
 var imageModel = require('../modules/image')
 var userHistoryModel = require('../modules/userhistory')
 var cateModel = require('../modules/category')
@@ -110,6 +113,46 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//------------------------------------------------------------------
+	// Get list video page = 1
+	// Return: render video list page
+	//------------------------------------------------------------------
+	app.get('/listvideo',function(req,res){
+		if(req.session.user != null){
+			var jsonResult = createJsonResult('GetListVideo', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, null);
+			res.render('block/listvideo', { title: 'List Video', path : req.path, resultJson : jsonResult });
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get list video category page = 1
+	// Return: render video category list page
+	//------------------------------------------------------------------
+	app.get('/listvideocate',function(req,res){
+		if(req.session.user != null){
+			var jsonResult = createJsonResult('GetListVideoCategory', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, null);
+			res.render('block/listvideocate', { title: 'List Video Category', path : req.path, resultJson : jsonResult });
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+
+	//------------------------------------------------------------------
+	// Get list learn category page = 1
+	// Return: render learn category list page
+	//------------------------------------------------------------------
+	app.get('/listlearncate',function(req,res){
+		if(req.session.user != null){
+			var jsonResult = createJsonResult('GetListLearnCategory', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, null);
+			res.render('block/listlearncate', { title: 'List Learn Category', path : req.path, resultJson : jsonResult });
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
 	// Get list location by page
 	// Return: list location
 	//------------------------------------------------------------------
@@ -158,6 +201,87 @@ module.exports = function(app, nodeuuid){
 				} else {
 					foodModel.getCountList365Food(function (err, retJsonCount) {
 						var jsonResult = createJsonResult('GetList365', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+						jsonResult.result2 = retJsonCount;
+						res.json(jsonResult, 200);
+					});
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get list video by page
+	// Return: list video
+	//------------------------------------------------------------------
+	app.post('/listvideo',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var page = input.page;
+			var offset = 10;
+			videoModel.getListVideo(page, offset, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetListVideo', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					videoModel.getCountListVideo(function (err, retJsonCount) {
+						var jsonResult = createJsonResult('GetListVideo', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+						jsonResult.result2 = retJsonCount;
+						res.json(jsonResult, 200);
+					});
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get list video category by page
+	// Return: list video category
+	//------------------------------------------------------------------
+	app.post('/listvideocate',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var page = input.page;
+			var offset = 10;
+			videoCateModel.getListVideoCate(page, offset, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetListVideoCate', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					videoCateModel.getCountVideoCate(function (err, retJsonCount) {
+						var jsonResult = createJsonResult('GetListVideoCate', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+						jsonResult.result2 = retJsonCount;
+						res.json(jsonResult, 200);
+					});
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get list learn category by page
+	// Return: list learn category
+	//------------------------------------------------------------------
+	app.post('/listlearncate',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var page = input.page;
+			var offset = 10;
+			learnCateModel.getListLearnCate(page, offset, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetListLearnoCate', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					learnCateModel.getCountLearnCate(function (err, retJsonCount) {
+						var jsonResult = createJsonResult('GetListLearnCate', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
 						jsonResult.result2 = retJsonCount;
 						res.json(jsonResult, 200);
 					});
@@ -219,6 +343,48 @@ module.exports = function(app, nodeuuid){
 		}
 	});
 
+	//------------------------------------------------------------------
+	// Set video to session
+	// Return: list news
+	//------------------------------------------------------------------
+	app.post('/admvideo',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			req.session.videoid = input.itemid;
+			res.json(req.session.user, 200);
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Set foods to session
+	// Return: list news
+	//------------------------------------------------------------------
+	app.post('/admvideocate',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			req.session.videocateid = input.itemid;
+			res.json(req.session.user, 200);
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Set learn cate to session
+	// Return: list news
+	//------------------------------------------------------------------
+	app.post('/admlearncate',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			req.session.learncateid = input.itemid;
+			res.json(req.session.user, 200);
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
 	//--------------------------------
 	// Delete Food
 	// Return: Delete Food
@@ -234,6 +400,75 @@ module.exports = function(app, nodeuuid){
 					return;
 				} else {
 					var jsonResult = createJsonResult('Delete Food', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+					res.json(jsonResult,200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//--------------------------------
+	// Delete Video
+	// Return: Delete Video
+	//--------------------------------
+	app.post('/delvideo',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var videoid = input.itemid;
+			videoModel.deleteVideo(videoid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Delete Video', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('Delete Video', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+					res.json(jsonResult,200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//--------------------------------
+	// Delete video category
+	// Return: Delete video category
+	//--------------------------------
+	app.post('/delvideocate',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var cateid = input.itemid;
+			videoCateModel.deleteVideoCate(cateid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Delete Video Category', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('Delete Video Category', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+					res.json(jsonResult,200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//--------------------------------
+	// Delete learn category
+	// Return: Delete video category
+	//--------------------------------
+	app.post('/dellearncate',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var cateid = input.itemid;
+			learnCateModel.deleteLearnCate(cateid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Delete Learn Category', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('Delete Learn Category', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
 					res.json(jsonResult,200);
 				}
 			});
@@ -310,6 +545,48 @@ module.exports = function(app, nodeuuid){
 		}
 	});
 
+	//--------------------------------
+	// Get list category video
+	// Return: JSON list country
+	//--------------------------------
+	app.post('/getlistvideocate',function(req,res){
+		if(req.session.user != null){
+			videoCateModel.getAllVideoCate(function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetAllVideoCate', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('GetAllVideoCate', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+					res.json(jsonResult,200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//--------------------------------
+	// Get list category learn
+	// Return: JSON list country
+	//--------------------------------
+	app.post('/getlistlearncate',function(req,res){
+		if(req.session.user != null){
+			learnCateModel.getAllLearnCate(function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetAllLearnCate', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('GetAllLearnCate', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+					res.json(jsonResult,200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
 	//------------------------------------------------------------------
 	// Get news in admin
 	// Return: list news
@@ -336,6 +613,54 @@ module.exports = function(app, nodeuuid){
 				res.render('block/m365', { title: 'Food', path: req.path, itemid : req.session.foodid });
 			} else {
 				res.render('block/m365', { title: 'Food', path: req.path, itemid : null });
+			}
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get food in admin
+	// Return: list food
+	//------------------------------------------------------------------
+	app.get('/video',function(req,res){
+		if(req.session.user != null){
+			if(req.session.videoid != null){
+				res.render('block/video', { title: 'Food', path: req.path, itemid : req.session.videoid });
+			} else {
+				res.render('block/video', { title: 'Food', path: req.path, itemid : null });
+			}
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get video cate in admin
+	// Return: list food
+	//------------------------------------------------------------------
+	app.get('/videocate',function(req,res){
+		if(req.session.user != null){
+			if(req.session.videocateid != null){
+				res.render('block/videocate', { title: 'Video Category', path: req.path, itemid : req.session.videocateid });
+			} else {
+				res.render('block/videocate', { title: 'Video Category', path: req.path, itemid : null });
+			}
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get learn cate in admin
+	// Return: list food
+	//------------------------------------------------------------------
+	app.get('/learncate',function(req,res){
+		if(req.session.user != null){
+			if(req.session.learncateid != null){
+				res.render('block/learncate', { title: 'Video Category', path: req.path, itemid : req.session.learncateid });
+			} else {
+				res.render('block/learncate', { title: 'Video Category', path: req.path, itemid : null });
 			}
 		} else {
 			res.redirect('/loginad');
@@ -382,6 +707,78 @@ module.exports = function(app, nodeuuid){
 				} else {
 					req.session.foodid = null;
 					var jsonResult = createJsonResult('Get Food', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult, 200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get video by id session
+	// Return: list foods
+	//------------------------------------------------------------------
+	app.post('/getadmvideo',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var videoid = input.itemid;
+			videoModel.getVideoByID(videoid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Get Food', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					req.session.videoid = null;
+					var jsonResult = createJsonResult('Get Food', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult, 200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get video category by id
+	// Return: list foods
+	//------------------------------------------------------------------
+	app.post('/getadmvideocate',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var cateid = input.itemid;
+			videoCateModel.getVideoCategoryByID(cateid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Get Video Category', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					req.session.videocateid = null;
+					var jsonResult = createJsonResult('Get Video Category', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult, 200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get learn category by id
+	// Return: list foods
+	//------------------------------------------------------------------
+	app.post('/getadmlearncate',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var cateid = input.itemid;
+			learnCateModel.getLearnCategoryByID(cateid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Get Learn Category', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					req.session.learncateid = null;
+					var jsonResult = createJsonResult('Get Learn Category', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
 					res.json(jsonResult, 200);
 				}
 			});
@@ -513,6 +910,188 @@ module.exports = function(app, nodeuuid){
 		}
 	});
 
+	//------------------------------------------------------------------
+	// Add new video
+	// Return: food added
+	//------------------------------------------------------------------
+	app.post('/addvideo',function(req,res){
+		//--------------------------------
+		// Define parameter
+		//--------------------------------
+		var arr = [];
+		var input = req.body;
+
+		//--------------------------------
+		// Case: Upload image
+		//--------------------------------
+		if(input.typeSubmit == 'uploadImage'){
+			if (!input.name) {
+				res.json("name must be specified when saving a new article", 400);
+				return;
+			}
+
+			// Upload multi images
+			if(req.files.photos[0].path == undefined){
+				for(var i=0; i < req.files.photos[0].length; i++){
+					// Call function upload images
+					videoModel.addImage(input, req.files.photos[0][i], function (err, objects) {
+						if (err) {
+							res.json(err, 400);
+							return;
+						} else {
+							arr.push(objects);
+						}
+					});
+				}
+			// Upload only one images
+			} else {
+				videoModel.addImage(input, req.files.photos[0], function (err, objects) {
+					if (err) {
+						res.json(err, 400);
+						return;
+					} else {
+						arr.push(objects);
+					}
+				});
+			}
+			res.json(arr,200);
+
+		//--------------------------------
+		// Case: Entry data
+		//--------------------------------
+		} else {
+			videoModel.addItem(input, function (err, objects) {
+				if (err) {
+					res.json(err, 400);
+					return;
+				} else {
+					res.json("Success",200);
+				}
+			});
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Add new video category
+	// Return: video category added
+	//------------------------------------------------------------------
+	app.post('/addvideocate',function(req,res){
+		//--------------------------------
+		// Define parameter
+		//--------------------------------
+		var arr = [];
+		var input = req.body;
+
+		//--------------------------------
+		// Case: Upload image
+		//--------------------------------
+		if(input.typeSubmit == 'uploadImage'){
+			if (!input.name) {
+				res.json("name must be specified when saving a new article", 400);
+				return;
+			}
+
+			// Upload multi images
+			if(req.files.photos[0].path == undefined){
+				for(var i=0; i < req.files.photos[0].length; i++){
+					// Call function upload images
+					videoCateModel.addImage(input, req.files.photos[0][i], function (err, objects) {
+						if (err) {
+							res.json(err, 400);
+							return;
+						} else {
+							arr.push(objects);
+						}
+					});
+				}
+			// Upload only one images
+			} else {
+				videoCateModel.addImage(input, req.files.photos[0], function (err, objects) {
+					if (err) {
+						res.json(err, 400);
+						return;
+					} else {
+						arr.push(objects);
+					}
+				});
+			}
+			res.json(arr,200);
+
+		//--------------------------------
+		// Case: Entry data
+		//--------------------------------
+		} else {
+			videoCateModel.addItem(input, function (err, objects) {
+				if (err) {
+					res.json(err, 400);
+					return;
+				} else {
+					res.json("Success",200);
+				}
+			});
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Add new learn category
+	// Return: learn category added
+	//------------------------------------------------------------------
+	app.post('/addlearncate',function(req,res){
+		//--------------------------------
+		// Define parameter
+		//--------------------------------
+		var arr = [];
+		var input = req.body;
+
+		//--------------------------------
+		// Case: Upload image
+		//--------------------------------
+		if(input.typeSubmit == 'uploadImage'){
+			if (!input.name) {
+				res.json("name must be specified when saving a new article", 400);
+				return;
+			}
+
+			// Upload multi images
+			if(req.files.photos[0].path == undefined){
+				for(var i=0; i < req.files.photos[0].length; i++){
+					// Call function upload images
+					learnCateModel.addImage(input, req.files.photos[0][i], function (err, objects) {
+						if (err) {
+							res.json(err, 400);
+							return;
+						} else {
+							arr.push(objects);
+						}
+					});
+				}
+			// Upload only one images
+			} else {
+				learnCateModel.addImage(input, req.files.photos[0], function (err, objects) {
+					if (err) {
+						res.json(err, 400);
+						return;
+					} else {
+						arr.push(objects);
+					}
+				});
+			}
+			res.json(arr,200);
+
+		//--------------------------------
+		// Case: Entry data
+		//--------------------------------
+		} else {
+			learnCateModel.addItem(input, function (err, objects) {
+				if (err) {
+					res.json(err, 400);
+					return;
+				} else {
+					res.json("Success",200);
+				}
+			});
+		}
+	});
 	//------------------------------------------------------------------
 	// Get category of infonews
 	// Return: list category
