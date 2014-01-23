@@ -144,7 +144,7 @@ exports.getVideoByID = function(videoid, callback){
 // Param callback: funtion callback
 //--------------------------------
 exports.updateLikeShare = function(videoid, like, share, down, callback){
-	videoDB.update({ _id : new ObjectID(foodid) }, 
+	videoDB.update({ _id : new ObjectID(videoid) }, 
 				  { $set : { like 	 : Number(like),
 							 share	 : Number(share),
 							 down	 : Number(down)
