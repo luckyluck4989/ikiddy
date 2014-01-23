@@ -1300,6 +1300,114 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//------------------------------------------------------------------
+	// Count video by category
+	// Return: list category video
+	//------------------------------------------------------------------
+	app.get('/getvideocategory',function(req,res){
+		videoModel.getTotalVideoInfo(function (err, retJson) {
+			if (err) {
+				var jsonResult = createJsonResult('GetTotalVideo', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+				res.json(jsonResult, 400);
+				return;
+			} else {
+				videoCateModel.getAllVideoCate(function (err, retJsonCate) {
+					if (err) {
+						var jsonResult = createJsonResult('GetAllCategoryByCode', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+						res.json(jsonResult, 400);
+						return;
+					} else {
+						for(var i = 0; i < retJsonCate.length; i++){
+							for( var j = 0; j < retJson.length; j++)
+							{
+								if(retJson[j]._id == retJsonCate[i]._id){
+									retJson[j].category = retJsonCate[i].name;
+									retJson[j].image = retJsonCate[i].image;
+									break;
+								}
+							}
+						}
+						var jsonResult = createJsonResult('GetTotalVideo', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+						res.json(jsonResult,200);
+					}
+				});
+			}
+		});
+	});
+
+	//------------------------------------------------------------------
+	// Update like and share video
+	// Return: video
+	//------------------------------------------------------------------
+	app.post('/updatevideolikeshare',function(req,res){
+		var input	= req.body;
+		var videoid	= input.videoid;
+		var like	= input.like;
+		var share	= input.share;
+		var down	= input.down;
+
+		// Validate locationid
+		var errmsg = validateParam(videoid.toString(),1);
+		if(errmsg != ""){
+			var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_FAIL, SYSTEM_ERR, errmsg, null)
+			res.json(jsonResult, 400);
+		} else {
+			videoModel.updateLikeShare(videoid, like, share, down, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('UpdateLikeShare', METHOD_POS, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult,200);
+				}
+			});
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get Video by Category
+	// Return: video
+	//------------------------------------------------------------------
+	app.get('/getvideobycategory',function(req,res){
+		var cateid = req.param('category');
+		videoModel.getAllVideoByCate(cateid, function (err, retJson) {
+			if (err) {
+				var jsonResult = createJsonResult('GetAllVideoByCategory', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+				res.json(jsonResult, 400);
+				return;
+			} else {
+				var jsonResult = createJsonResult('GetAllVideoByCategory', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+				res.json(jsonResult,200);
+			}
+		});
+	});
+
+	//------------------------------------------------------------------
+	// Get Video by Category
+	// Return: video
+	//------------------------------------------------------------------
+	app.get('/getvideobyid',function(req,res){
+		var videoid = req.param('videoid');
+
+		// Validate locationid
+		var errmsg = validateParam(videoid.toString(),1);
+		if(errmsg != ""){
+			var jsonResult = createJsonResult('GetFoodByID', METHOD_POS, STATUS_FAIL, SYSTEM_ERR, errmsg, null)
+			res.json(jsonResult, 400);
+		} else {
+			videoModel.getVideoByID(videoid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetAllVideoByCategory', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('GetAllVideoByCategory', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult,200);
+				}
+			});
+		}
+	});
+	//------------------------------------------------------------------
 	// Get news by id
 	// Return: news
 	//------------------------------------------------------------------

@@ -112,6 +112,19 @@ exports.getAll365Food = function(callback){
 }
 
 //--------------------------------
+// Get list 365 food
+// Param callback: funtion callback
+//--------------------------------
+exports.getAllVideoByCate = function(cateid, callback){
+	videoDB.find({videocate : cateid}).sort([['name','asc']]).toArray(function(err,result){
+		if(err)
+			callback(err,'Can not get list location');
+		else
+			callback(null,result);
+	});
+}
+
+//--------------------------------
 // Get video by id
 // Param videoid: id of video
 // Param callback: funtion callback
@@ -127,13 +140,14 @@ exports.getVideoByID = function(videoid, callback){
 
 //--------------------------------
 // Update like, share of food
-// Param foodid: id of food
+// Param videoid: id of food
 // Param callback: funtion callback
 //--------------------------------
-exports.updateLikeShare = function(foodid, like, share, callback){
-	foodDB.update({ _id : new ObjectID(foodid) }, 
+exports.updateLikeShare = function(videoid, like, share, down, callback){
+	videoDB.update({ _id : new ObjectID(foodid) }, 
 				  { $set : { like 	 : Number(like),
-							 share	 : Number(share)
+							 share	 : Number(share),
+							 down	 : Number(down)
 						   } 
 				  },
 				  function(err,result){
@@ -148,13 +162,10 @@ exports.updateLikeShare = function(foodid, like, share, callback){
 // Count category
 // Param callback: funtion callback
 //--------------------------------
-exports.getTotalNewsInfo = function(code, callback){
-	foodDB.aggregate( [
-		{ $match: { categoryid	: code  } },
-		{ $group: { _id			: "$subcategoryid",
-					sum_like	: { $sum: "$like" },
-					sum_share	: { $sum: "$share" }, 
-					sum_add		: { $sum: "$add" } 
+exports.getTotalVideoInfo = function(callback){
+	videoDB.aggregate( [
+		{ $group: { _id			: "$videocate",
+					total_video	: { $sum: 1 }
 				  } 
 		},
 		{ $sort: { _id: 1 } }
