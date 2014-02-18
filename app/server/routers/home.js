@@ -185,6 +185,98 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//------------------------------------------------------------------
+	// Get list info new page = 1
+	// Return: render info news page
+	//------------------------------------------------------------------
+	app.get('/listnewdd',function(req,res){
+		if(req.session.user != null){
+			var jsonResult = createJsonResult('GetListNewNutrition', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, null);
+			jsonResult.subcate = req.session.subcate;
+			res.render('block/listnewdd', { title: 'List News', path : req.path, resultJson : jsonResult });
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get list location by page
+	// Return: list location
+	//------------------------------------------------------------------
+	app.post('/listnewdd',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var page = input.page;
+			var subcategory = input.subcate;
+			var offset = 10;
+			if(input.subcate == 0)
+				subcategory = req.session.subcate;
+			if(input.subcate != 0)
+				req.session.subcate = input.subcate;
+			newsModel.getListNewDd(subcategory, page, offset, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetListNewDd', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					newsModel.getCountListNewDd(subcategory, function (err, retJsonCount) {
+						var jsonResult = createJsonResult('GetListNewdd', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+						jsonResult.result2 = retJsonCount;
+						res.json(jsonResult, 200);
+					});
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get list info new page = 1
+	// Return: render info news page
+	//------------------------------------------------------------------
+	app.get('/listnewtips',function(req,res){
+		if(req.session.user != null){
+			var jsonResult = createJsonResult('GetListNewNutrition', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, null);
+			jsonResult.subcate = req.session.subcate;
+			res.render('block/listnewtips', { title: 'List News', path : req.path, resultJson : jsonResult });
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get list location by page
+	// Return: list location
+	//------------------------------------------------------------------
+	app.post('/listnewtips',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var page = input.page;
+			var subcategory = input.subcate;
+			var offset = 10;
+			if(input.subcate == 0)
+				subcategory = req.session.subcate;
+			if(input.subcate != 0)
+				req.session.subcate = input.subcate;
+			newsModel.getListNewTips(subcategory, page, offset, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetListNewTips', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					newsModel.getCountListNewTips(subcategory, function (err, retJsonCount) {
+						var jsonResult = createJsonResult('GetListNewTips', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+						jsonResult.result2 = retJsonCount;
+						res.json(jsonResult, 200);
+					});
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
 	// Get list 365 food by page
 	// Return: list 365 food
 	//------------------------------------------------------------------
@@ -535,6 +627,7 @@ module.exports = function(app, nodeuuid){
 						} else {
 							var jsonResult = createJsonResult('GetListSubCategory', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
 							jsonResult.resultsub = retJsonSub;
+							jsonResult.subcate = req.session.subcate;
 							res.json(jsonResult,200);
 						}
 					});

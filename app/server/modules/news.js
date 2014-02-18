@@ -261,3 +261,63 @@ exports.deleteNews = function(newsid, callback){
 			callback(null,result);
 	});
 }
+
+//--------------------------------
+// Get list news dd
+// Param page: curent page
+// Param offset: offset setting
+// Param callback: funtion callback
+//--------------------------------
+exports.getListNewDd = function(subcategory, page, offset, callback){
+	var iSkip = (page - 1) * offset;
+	var iOffset = page * offset;
+	newsDB.find({ $and: [{ categoryid: "2"} , { subcategoryid: subcategory.toString() }]}).sort([['_id','desc']]).skip(iSkip).limit(iOffset).toArray(function(err,result){
+		if(err)
+			callback(err,'Can not get list location');
+		else
+			callback(null,result);
+	});
+}
+
+//--------------------------------
+// Get count list news dd
+// Param callback: funtion callback
+//--------------------------------
+exports.getCountListNewDd = function(subcategory, callback){
+	newsDB.count({ $and: [{ categoryid: "2"} , { subcategoryid: subcategory.toString() }]}, function(err,result){
+		if(err)
+			callback(err,'Can not get list location');
+		else
+			callback(null,result);
+	});
+}
+
+//--------------------------------
+// Get list news dd
+// Param page: curent page
+// Param offset: offset setting
+// Param callback: funtion callback
+//--------------------------------
+exports.getListNewTips = function(subcategory, page, offset, callback){
+	var iSkip = (page - 1) * offset;
+	var iOffset = page * offset;
+	newsDB.find({ $and: [{ categoryid: "3"} , { subcategoryid: subcategory.toString() }]}).sort([['_id','desc']]).skip(iSkip).limit(iOffset).toArray(function(err,result){
+		if(err)
+			callback(err,'Can not get list location');
+		else
+			callback(null,result);
+	});
+}
+
+//--------------------------------
+// Get count list news dd
+// Param callback: funtion callback
+//--------------------------------
+exports.getCountListNewTips = function(subcategory, callback){
+	newsDB.count({ $and: [{ categoryid: "3"} , { subcategoryid: subcategory.toString() }]}, function(err,result){
+		if(err)
+			callback(err,'Can not get list location');
+		else
+			callback(null,result);
+	});
+}

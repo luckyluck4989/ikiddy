@@ -8,7 +8,6 @@ var autocomplete;
 var infowindow;
 var oldJson;
 var arrCate,arrSubCate;
-var currentSubCate;
 $(document).ready(function() {
 	$("#title").focus();
 
@@ -28,7 +27,6 @@ $(document).ready(function() {
 					}));
 				});
 				arrCate = data.result;
-				currentSubCate = data.subcate;
 
 				$('#subcategory')[0].options.length = 0;
 				// Draw data subcategory
@@ -102,13 +100,7 @@ $(document).ready(function() {
 					formData.push({name:"subcategoryname", value:$("#subcategory option:selected").text()});
 				},
 				success	: function(responseText, status, xhr, $form){
-					if (currentSubCate >= 30) {
-						window.location.href = '/listnewtips';
-					} else if (currentSubCate >= 20) {
-						window.location.href = '/listnewdd';
-					} else {
-						window.location.href = '/listnewsch';
-					}
+					window.location.href = '/listnewsch';
 				},
 				error : function(e){
 					alert(e.responseText);
@@ -151,13 +143,7 @@ $(document).ready(function() {
 
 	// Cancel button click
 	$("#btnCancel").click(function(e){
-		if (currentSubCate >= 30) {
-			window.location.href = '/listnewtips';
-		} else if (currentSubCate >= 20) {
-			window.location.href = '/listnewdd';
-		} else {
-			window.location.href = '/listnewsch';
-		}
+		window.location.href = '/listnewsch';
 	});
 });
 

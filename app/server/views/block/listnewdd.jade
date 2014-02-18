@@ -1,0 +1,91 @@
+extends ../layout
+
+block content
+	#main-content
+		.row
+			.col-md-12
+				.box.box-orange
+					.box-title
+						h3
+							select#subcategory.form-control.chosen.chzn-done(data-placeholder='Choose a category', tabindex='2', style='height:33px;')
+								- if (resultJson != undefined && resultJson.subcate != "" && resultJson.subcate == "21")
+									option(value='21', selected=true) Các độ tuổi, giai đoạn phát triển của bé
+								- else
+									option(value='21') Các độ tuổi, giai đoạn phát triển của bé
+								- if (resultJson != undefined && resultJson.subcate != "" && resultJson.subcate == "22")
+									option(value='22', selected=true) Bổ sung chất béo cho bé
+								- else
+									option(value='22') Bổ sung chất béo cho bé
+						.box-tool
+							a(data-action="collapse", href="#")
+								i.icon-chevron-up
+							a(data-action="close", href="#")
+								i.icon-remove
+					.box-content(style="min-height:500px")
+						.btn-toolbar.pull-right
+							.btn-group
+								a.btn.btn-circle.show-tooltip(title='', href='/news', data-original-title='Thêm mới')
+									i.icon-plus
+							.btn-group
+								a.btn.btn-circle.show-tooltip(title='', href='/listnewdd', data-original-title='Refresh')
+									i.icon-repeat
+						br
+						br
+						.table-responsive
+							table.table.table-advance#newddtbl
+								thead
+									tr
+										th(style='width:18px')
+										th Tên
+										th Nhóm
+										th Like
+										th Add
+										th Share
+										th(style='display:none;')
+										th.visible-md.visible-lg(style='width:130px') Thao tác
+								tbody
+									if(resultJson.resul !=  null && resultJson.result.length > 0)
+										-	for(var i=0;i<resultJson.result.length;i++)
+											if(i%2 != 0)
+												tr
+													td
+													td
+														a(href='#', class='newsid')= resultJson.result[i].title
+													td= resultJson.result[i].subcategoryname
+													td
+														span.label.label-success= resultJson.result[i].like
+													td
+														span.label.label-warning= resultJson.result[i].add
+													td
+														span.label.label-success= resultJson.result[i].share
+													td#rowID(style='display:none;')= resultJson.result[i]._id
+													td.visible-md.visible-lg
+														.btn-group
+															a.btn.btn-sm.show-tooltip(title='', href='#', class='newsid', data-original-title='Edit')
+																i.icon-edit
+															a.btn.btn-sm.btn-danger.show-tooltip(title='', class='delnewsid', href='#', data-original-title='Delete')
+																i.icon-trash
+											else
+												tr.table-flag-blue
+													td
+													td
+														a(href='#', class='newsid')= resultJson.result[i].title
+													td= resultJson.result[i].subcategoryname
+													td
+														span.label.label-success= resultJson.result[i].like
+													td
+														span.label.label-warning= resultJson.result[i].add
+													td
+														span.label.label-success= resultJson.result[i].share
+													td#rowID(style='display:none;')= resultJson.result[i]._id
+													td.visible-md.visible-lg
+														.btn-group
+															a.btn.btn-sm.show-tooltip(title='', href='#' , class='newsid', data-original-title='Edit')
+																i.icon-edit
+															a.btn.btn-sm.btn-danger.show-tooltip(title='', href='#', class='delnewsid', data-original-title='Delete')
+																i.icon-trash
+						.text-center
+							ul.pagination#pagingid
+block scripts
+	script(src='/vendor/jquery.form.js')
+	script(src='/javascripts/listnewdd.js')
