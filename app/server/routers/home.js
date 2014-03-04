@@ -3,6 +3,7 @@ var newsModel = require('../modules/news')
 var foodModel = require('../modules/food')
 var videoModel = require('../modules/video')
 var videoCateModel = require('../modules/videocate')
+var newsCateModel = require('../modules/newscate')
 var learnCateModel = require('../modules/learncate')
 var imageModel = require('../modules/image')
 var userHistoryModel = require('../modules/userhistory')
@@ -138,6 +139,18 @@ module.exports = function(app, nodeuuid){
 		}
 	});
 
+	//------------------------------------------------------------------
+	// Get list news category page = 1
+	// Return: render video category list page
+	//------------------------------------------------------------------
+	app.get('/listnewscate',function(req,res){
+		if(req.session.user != null){
+			var jsonResult = createJsonResult('GetListNewsCategory', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, null);
+			res.render('block/listnewscate', { title: 'List News Category', path : req.path, resultJson : jsonResult });
+		} else {
+			res.redirect('/loginad');
+		}
+	});
 
 	//------------------------------------------------------------------
 	// Get list learn category page = 1
@@ -358,6 +371,33 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//------------------------------------------------------------------
+	// Get list news category by page
+	// Return: list video category
+	//------------------------------------------------------------------
+	app.post('/listnewscate',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var page = input.page;
+			var offset = 10;
+			newsCateModel.getListNewsCate(page, offset, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetListVideoCate', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					newsCateModel.getCountNewsCate(function (err, retJsonCount) {
+						var jsonResult = createJsonResult('GetListVideoCate', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+						jsonResult.result2 = retJsonCount;
+						res.json(jsonResult, 200);
+					});
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
 	// Get list learn category by page
 	// Return: list learn category
 	//------------------------------------------------------------------
@@ -464,6 +504,20 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//------------------------------------------------------------------
+	// Set news to session
+	// Return: list news
+	//------------------------------------------------------------------
+	app.post('/admnewscate',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			req.session.newscateid = input.itemid;
+			res.json(req.session.user, 200);
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
 	// Set learn cate to session
 	// Return: list news
 	//------------------------------------------------------------------
@@ -538,6 +592,29 @@ module.exports = function(app, nodeuuid){
 					return;
 				} else {
 					var jsonResult = createJsonResult('Delete Video Category', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+					res.json(jsonResult,200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//--------------------------------
+	// Delete news category
+	// Return: Delete video category
+	//--------------------------------
+	app.post('/delnewscate',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var cateid = input.itemid;
+			newsCateModel.deleteNewsCate(cateid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Delete News Category', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('Delete News Category', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
 					res.json(jsonResult,200);
 				}
 			});
@@ -660,6 +737,27 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//--------------------------------
+	// Get list category news
+	// Return: JSON list country
+	//--------------------------------
+	app.post('/getlistnewscate',function(req,res){
+		if(req.session.user != null){
+			newsCateModel.getAllNewsCate(function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetAllVideoCate', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('GetAllVideoCate', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+					res.json(jsonResult,200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//--------------------------------
 	// Get list category learn
 	// Return: JSON list country
 	//--------------------------------
@@ -738,6 +836,22 @@ module.exports = function(app, nodeuuid){
 				res.render('block/videocate', { title: 'Video Category', path: req.path, itemid : req.session.videocateid });
 			} else {
 				res.render('block/videocate', { title: 'Video Category', path: req.path, itemid : null });
+			}
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get news cate in admin
+	// Return: list food
+	//------------------------------------------------------------------
+	app.get('/newscate',function(req,res){
+		if(req.session.user != null){
+			if(req.session.newscateid != null){
+				res.render('block/newscate', { title: 'News Category', path: req.path, itemid : req.session.newscateid });
+			} else {
+				res.render('block/newscate', { title: 'News Category', path: req.path, itemid : null });
 			}
 		} else {
 			res.redirect('/loginad');
@@ -848,6 +962,30 @@ module.exports = function(app, nodeuuid){
 				} else {
 					req.session.videocateid = null;
 					var jsonResult = createJsonResult('Get Video Category', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult, 200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get news category by id
+	// Return: list foods
+	//------------------------------------------------------------------
+	app.post('/getadmnewscate',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var cateid = input.itemid;
+			newsCateModel.getNewsCategoryByID(cateid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Get News Category', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					req.session.newscateid = null;
+					var jsonResult = createJsonResult('Get News Category', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
 					res.json(jsonResult, 200);
 				}
 			});
@@ -1115,6 +1253,67 @@ module.exports = function(app, nodeuuid){
 		//--------------------------------
 		} else {
 			videoCateModel.addItem(input, function (err, objects) {
+				if (err) {
+					res.json(err, 400);
+					return;
+				} else {
+					res.json("Success",200);
+				}
+			});
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Add new video category
+	// Return: video category added
+	//------------------------------------------------------------------
+	app.post('/addnewscate',function(req,res){
+		//--------------------------------
+		// Define parameter
+		//--------------------------------
+		var arr = [];
+		var input = req.body;
+
+		//--------------------------------
+		// Case: Upload image
+		//--------------------------------
+		if(input.typeSubmit == 'uploadImage'){
+			if (!input.name) {
+				res.json("name must be specified when saving a new article", 400);
+				return;
+			}
+
+			// Upload multi images
+			if(req.files.photos[0].path == undefined){
+				for(var i=0; i < req.files.photos[0].length; i++){
+					// Call function upload images
+					newsCateModel.addImage(input, req.files.photos[0][i], function (err, objects) {
+						if (err) {
+							res.json(err, 400);
+							return;
+						} else {
+							arr.push(objects);
+						}
+					});
+				}
+			// Upload only one images
+			} else {
+				newsCateModel.addImage(input, req.files.photos[0], function (err, objects) {
+					if (err) {
+						res.json(err, 400);
+						return;
+					} else {
+						arr.push(objects);
+					}
+				});
+			}
+			res.json(arr,200);
+
+		//--------------------------------
+		// Case: Entry data
+		//--------------------------------
+		} else {
+			newsCateModel.addItem(input, function (err, objects) {
 				if (err) {
 					res.json(err, 400);
 					return;

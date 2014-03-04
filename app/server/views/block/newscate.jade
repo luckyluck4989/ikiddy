@@ -1,0 +1,45 @@
+extends ../layout
+
+block content
+	#main-content
+		.row
+			.col-md-12
+				.box.box-orange
+					.box-title
+						h3
+							i.icon-file
+							| Edit News Category
+						.box-tool
+							a(data-action="collapse", href="#")
+								i.icon-chevron-up
+							a(data-action="close", href="#")
+								i.icon-remove
+					.box-content
+						form(action="/addnewscate", class="form-horizontal", method="POST", enctype="multipart/form-data", id="addItemForm")
+							.form-group
+								label.col-sm-3.col-lg-2.control-label Tên
+								.col-sm-9.col-lg-10.controls
+									input.form-control#name(type='text', value='', name ="name", tabindex='1')
+									input.form-control#typeSubmit(style='display:none;', type='text', value='Jack', name ="typeSubmit")
+									input.form-control#itemid(style='display:none;', type='text', value=itemid, name ="itemid")
+							.form-group
+								label.col-sm-3.col-lg-2.control-label
+								.col-sm-9.col-lg-10.controls
+									#imageloadstatus(style='display: none;')
+										img(src='/images/loader.gif', alt='Uploading....')
+									#imageloadbutton
+										input#photoimg(type='file', name='photos[]', multiple='true', tabindex='2')
+							.form-group
+								label.col-sm-3.col-lg-2.control-label
+								.col-sm-9.col-lg-10.controls
+									#listImage
+							.form-group
+								label.col-sm-3.col-lg-2.control-label
+								.col-sm-9.col-lg-10.controls
+									button.btn.btn-primary(type='submit',id = "btnSave", tabindex='3') Submit
+									button.btn(type='button', id = "btnCancel", tabindex='4') Cancel
+block scripts
+	//script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+	script(src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places")
+	script(src='/vendor/jquery.form.js')
+	script(src='/javascripts/newscate.js')
