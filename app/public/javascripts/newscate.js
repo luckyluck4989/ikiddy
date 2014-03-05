@@ -26,7 +26,7 @@ $(document).ready(function() {
 					$("#name").val(data.result.subcategoryname);
 
 					// Draw image
-					var img = '<img width="200px" height="auto" src="'+ data.result.image +'">';
+					var img = '<img width="200px" height="300px" src="'+ data.result.image +'">';
 					$('#listImage').append(img);
 					arrImage[0] = data.result.image;
 				}
@@ -77,7 +77,7 @@ $(document).ready(function() {
 					A.hide();
 					B.show();
 					for(var i =0; i< response.length; i++){
-						var img = '<img src="/upload/'+ response[i] +'">';
+						var img = '<img width="200px" height="300px" src="/upload/'+ response[i] +'">';
 						response[i] = document.location.origin + '/upload/' + response[i];
 						$('#listImage').append(img);
 					}
