@@ -69,7 +69,13 @@ exports.addItem = function(input, callback){
 							like			: 10,
 							share			: 10,
 							faceid			: "",
-							adddatetime		: iDate
+							adddatetime		: iDate,
+							meals			: "",
+							namemeals		: "",
+							cook			: "",
+							age				: "",
+							mainmaterial	: "",
+							description		: ""
 						};
   
 		itemEntry.name				= input.name;
@@ -78,6 +84,21 @@ exports.addItem = function(input, callback){
 		itemEntry.like 				= 0;
 		itemEntry.share 			= 0;
 		itemEntry.image 			= input.image;
+		itemEntry.meals 			= input.meals;
+		switch(input.meals) {
+			case '1': itemEntry.namemeals = "Sáng";
+				break;
+			case '2': itemEntry.namemeals = "Trưa";
+				break;
+			case '3': itemEntry.namemeals = "Xế";
+				break;
+			case '4': itemEntry.namemeals = "Tối";
+				break;
+		}
+		itemEntry.cook 				= input.cook;
+		itemEntry.age 				= input.age;
+		itemEntry.mainmaterial 		= input.mainmaterial;
+		itemEntry.description 		= input.description;
 
 		if (itemEntry._id) {
 			itemEntry._id = new ObjectID(itemEntry._id);
@@ -124,11 +145,29 @@ exports.addItem = function(input, callback){
 			callback(error,null);
 		});
 	} else {
+		var nameMealsValue = "";
+		switch(input.meals) {
+			case '1': nameMealsValue = "Sáng";
+				break;
+			case '2': nameMealsValue = "Trưa";
+				break;
+			case '3': nameMealsValue = "Xế";
+				break;
+			case '4': nameMealsValue = "Tối";
+				break;
+		}
+
 		foodDB.update( { _id : new ObjectID(input.itemid) }, 
 							{ $set : { name 		: input.name,
 									   materials 	: input.material,
 									   method		: input.method,
-									   image		: input.image
+									   image		: input.image,
+									   meals		: input.meals,
+									   namemeals	: nameMealsValue,
+									   cook			: input.cook,
+									   age			: input.age,
+									   mainmaterial	: input.mainmaterial,
+									   description	: input.description
 							} }, function(err,result){
 			if(err)
 				callback(err,'Can not update user');

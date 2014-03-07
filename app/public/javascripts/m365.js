@@ -26,6 +26,11 @@ $(document).ready(function() {
 					$("#name").val(data.result.name);
 					$("#material").val(data.result.materials);
 					$("#method").val(data.result.method);
+					$("#meals").val(data.result.meals);
+					$("#cook").val(data.result.cook);
+					$("#age").val(data.result.age);
+					$("#mainmaterial").val(data.result.mainmaterial);
+					$("#description").val(data.result.description);
 
 					// Draw image
 					var img = '<img width="200px" height="auto" src="'+ data.result.image +'">';

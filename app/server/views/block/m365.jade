@@ -23,6 +23,30 @@ block content
 									input.form-control#typeSubmit(style='display:none;', type='text', value='Jack', name ="typeSubmit")
 									input.form-control#itemid(style='display:none;', type='text', value=itemid, name ="itemid")
 							.form-group
+								label.col-sm-3.col-lg-2.control-label Bữa ăn
+								.col-sm-9.col-lg-10.controls
+									select#meals.form-control.chosen.chzn-done(data-placeholder='Choose a category', tabindex='2', style='', name ="meals")
+										option(value='1') Sáng
+										option(value='2') Trưa
+										option(value='3') Xế
+										option(value='4') Tối
+							.form-group
+								label.col-sm-3.col-lg-2.control-label Cách nấu
+								.col-sm-9.col-lg-10.controls
+									input.form-control#cook(type='text', value='', name ="cook", tabindex='3')
+							.form-group
+								label.col-sm-3.col-lg-2.control-label Độ tuổi
+								.col-sm-9.col-lg-10.controls
+									input.form-control#age(type='text', value='', name ="age", tabindex='4')
+							.form-group
+								label.col-sm-3.col-lg-2.control-label Nguyên liệu chính
+								.col-sm-9.col-lg-10.controls
+									input.form-control#mainmaterial(type='text', value='', name ="mainmaterial", tabindex='4')
+							.form-group
+								label.col-sm-3.col-lg-2.control-label Mô tả
+								.col-sm-9.col-lg-10.controls
+									textarea.form-control#description(rows='6', name = "description", tabindex='2')
+							.form-group
 								label.col-sm-3.col-lg-2.control-label Nguyên liệu
 								.col-sm-9.col-lg-10.controls
 									textarea.form-control#material(rows='6', name = "material", tabindex='2')
