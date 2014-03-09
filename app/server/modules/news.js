@@ -206,7 +206,8 @@ exports.getTotalNewsInfo = function(code, callback){
 		{ $group: { _id			: "$subcategoryid",
 					sum_like	: { $sum: "$like" },
 					sum_share	: { $sum: "$share" }, 
-					sum_add		: { $sum: "$add" } 
+					sum_add		: { $sum: "$add" },
+					count		: { $sum: 1 }
 				  } 
 		},
 		{ $sort: { _id: 1 } }
