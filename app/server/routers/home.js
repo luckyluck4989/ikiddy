@@ -1521,6 +1521,28 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//------------------------------------------------------------------
+	// Count like by group info new
+	// Return: list location
+	//------------------------------------------------------------------
+	app.get('/gettotalfoodinfo',function(req,res){
+		// CODE DEFINE
+		// 1: Info Product
+		// 2: Info Calo
+		// 3: Info Tips
+		var code = req.param('code');
+		foodModel.getTotalFoodInfo(code, function (err, retJson) {
+			if (err) {
+				var jsonResult = createJsonResult('GetTotalNewsInfo', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+				res.json(jsonResult, 400);
+				return;
+			} else {
+				var jsonResult = createJsonResult('GetTotalNewsInfo', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+				res.json(jsonResult,200);
+			}
+		});
+	});
+
+	//------------------------------------------------------------------
 	// Get list 365 food
 	// Return: list food
 	//------------------------------------------------------------------
@@ -1589,6 +1611,24 @@ module.exports = function(app, nodeuuid){
 				}
 			});
 		}
+	});
+
+	//------------------------------------------------------------------
+	// Get Video by Category
+	// Return: video
+	//------------------------------------------------------------------
+	app.get('/getfoodbyproperties',function(req,res){
+		var code = req.param('code');
+		foodModel.getFoodByProperties(code, function (err, retJson) {
+			if (err) {
+				var jsonResult = createJsonResult('getFoodByProperties', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+				res.json(jsonResult, 400);
+				return;
+			} else {
+				var jsonResult = createJsonResult('getFoodByProperties', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+				res.json(jsonResult,200);
+			}
+		});
 	});
 
 	//------------------------------------------------------------------

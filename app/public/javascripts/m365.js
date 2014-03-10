@@ -33,7 +33,7 @@ $(document).ready(function() {
 					$("#description").val(data.result.description);
 
 					// Draw image
-					var img = '<img width="200px" height="auto" src="'+ data.result.image +'">';
+					var img = '<img width="300px" height="200px" src="'+ data.result.image +'">';
 					$('#listImage').append(img);
 					arrImage[0] = data.result.image;
 				}
@@ -86,7 +86,7 @@ $(document).ready(function() {
 					A.hide();
 					B.show();
 					for(var i =0; i< response.length; i++){
-						var img = '<img src="/upload/'+ response[i] +'">';
+						var img = '<img width="300px" height="200px" src="/upload/'+ response[i] +'">';
 						response[i] = document.location.origin + '/upload/' + response[i];
 						$('#listImage').append(img);
 					}

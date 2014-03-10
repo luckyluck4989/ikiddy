@@ -71,10 +71,13 @@ exports.addItem = function(input, callback){
 							faceid			: "",
 							adddatetime		: iDate,
 							meals			: "",
-							namemeals		: "",
+							name_meals		: "",
 							cook			: "",
+							name_cook		: "",
 							age				: "",
+							name_age			: "",
 							mainmaterial	: "",
+							name_mainmaterial : "",
 							description		: ""
 						};
   
@@ -85,20 +88,58 @@ exports.addItem = function(input, callback){
 		itemEntry.share 			= 0;
 		itemEntry.image 			= input.image;
 		itemEntry.meals 			= input.meals;
-		switch(input.meals) {
-			case '1': itemEntry.namemeals = "Sáng";
-				break;
-			case '2': itemEntry.namemeals = "Trưa";
-				break;
-			case '3': itemEntry.namemeals = "Xế";
-				break;
-			case '4': itemEntry.namemeals = "Tối";
-				break;
-		}
 		itemEntry.cook 				= input.cook;
 		itemEntry.age 				= input.age;
 		itemEntry.mainmaterial 		= input.mainmaterial;
 		itemEntry.description 		= input.description;
+
+		switch(input.meals) {
+			case '41': itemEntry.name_meals = "Sáng";
+				break;
+			case '42': itemEntry.name_meals = "Trưa";
+				break;
+			case '43': itemEntry.name_meals = "Chiều";
+				break;
+			case '44': itemEntry.name_meals = "Tối";
+				break;
+		}
+
+		switch(input.cook) {
+			case '51': itemEntry.name_cook = "Bột – Nghiền";
+				break;
+			case '52': itemEntry.name_cook = "Cháo";
+				break;
+			case '53': itemEntry.name_cook = "Cơm";
+				break;
+			case '54': itemEntry.name_cook = "Canh – Soup";
+				break;
+			case '54': itemEntry.name_cook = "Các món khác";
+				break;
+		}
+
+		switch(input.age) {
+			case '61': itemEntry.name_age = "6-10 tháng";
+				break;
+			case '62': itemEntry.name_age = "11-18 tháng";
+				break;
+			case '63': itemEntry.name_age = "19-36 tháng";
+				break;
+		}
+
+		switch(input.mainmaterial) {
+			case '71': itemEntry.name_mainmaterial = "Heo";
+				break;
+			case '72': itemEntry.name_mainmaterial = "Bò";
+				break;
+			case '73': itemEntry.name_mainmaterial = "Gà";
+				break;
+			case '74': itemEntry.name_mainmaterial = "Hải sản";
+				break;
+			case '75': itemEntry.name_mainmaterial = "Rau củ quả";
+				break;
+			case '76': itemEntry.name_mainmaterial = "Nguyên liệu khác";
+				break;
+		}
 
 		if (itemEntry._id) {
 			itemEntry._id = new ObjectID(itemEntry._id);
@@ -146,14 +187,55 @@ exports.addItem = function(input, callback){
 		});
 	} else {
 		var nameMealsValue = "";
+		var nameCook = "";
+		var nameAge = "";
+		var nameMainMaterial = "";
+
 		switch(input.meals) {
-			case '1': nameMealsValue = "Sáng";
+			case '41': nameMealsValue = "Sáng";
 				break;
-			case '2': nameMealsValue = "Trưa";
+			case '42': nameMealsValue = "Trưa";
 				break;
-			case '3': nameMealsValue = "Xế";
+			case '43': nameMealsValue = "Chiều";
 				break;
-			case '4': nameMealsValue = "Tối";
+			case '44': nameMealsValue = "Tối";
+				break;
+		}
+
+		switch(input.cook) {
+			case '51': nameCook = "Bột – Nghiền";
+				break;
+			case '52': nameCook = "Cháo";
+				break;
+			case '53': nameCook = "Cơm";
+				break;
+			case '54': nameCook = "Canh – Soup";
+				break;
+			case '54': nameCook = "Các món khác";
+				break;
+		}
+
+		switch(input.age) {
+			case '61': nameAge = "6-10 tháng";
+				break;
+			case '62': nameAge = "11-18 tháng";
+				break;
+			case '63': nameAge = "19-36 tháng";
+				break;
+		}
+
+		switch(input.mainmaterial) {
+			case '71': nameMainMaterial = "Heo";
+				break;
+			case '72': nameMainMaterial = "Bò";
+				break;
+			case '73': nameMainMaterial = "Gà";
+				break;
+			case '74': nameMainMaterial = "Hải sản";
+				break;
+			case '75': nameMainMaterial = "Rau củ quả";
+				break;
+			case '76': nameMainMaterial = "Nguyên liệu khác";
 				break;
 		}
 
@@ -163,10 +245,13 @@ exports.addItem = function(input, callback){
 									   method		: input.method,
 									   image		: input.image,
 									   meals		: input.meals,
-									   namemeals	: nameMealsValue,
+									   name_meals	: nameMealsValue,
 									   cook			: input.cook,
+									   name_cook	: nameCook,
 									   age			: input.age,
+									   name_age		: nameAge,
 									   mainmaterial	: input.mainmaterial,
+									   name_mainmaterial	: nameMainMaterial,
 									   description	: input.description
 							} }, function(err,result){
 			if(err)
@@ -189,6 +274,43 @@ exports.getAll365Food = function(callback){
 			callback(null,result);
 	});
 }
+
+//--------------------------------
+// Get list 365 food
+// Param callback: funtion callback
+//--------------------------------
+exports.getFoodByProperties = function(prop, callback){
+	if (Number(prop) < 50) {
+		foodDB.find({ meals : prop }).sort([['name','asc']]).toArray(function(err,result){
+			if(err)
+				callback(err,'Can not get list location');
+			else
+				callback(null,result);
+		});
+	} else if (Number(prop) < 60) {
+		foodDB.find({ cook : prop }).sort([['name','asc']]).toArray(function(err,result){
+			if(err)
+				callback(err,'Can not get list location');
+			else
+				callback(null,result);
+		});
+	} else if (Number(prop) < 70) {
+		foodDB.find({ age : prop }).sort([['name','asc']]).toArray(function(err,result){
+			if(err)
+				callback(err,'Can not get list location');
+			else
+				callback(null,result);
+		});
+	} else {
+		foodDB.find({ mainmaterial : prop }).sort([['name','asc']]).toArray(function(err,result){
+			if(err)
+				callback(err,'Can not get list location');
+			else
+				callback(null,result);
+		});
+	} 
+}
+
 
 //--------------------------------
 // Get news by id
@@ -227,23 +349,81 @@ exports.updateLikeShare = function(foodid, like, share, callback){
 // Count category
 // Param callback: funtion callback
 //--------------------------------
-exports.getTotalNewsInfo = function(code, callback){
-	foodDB.aggregate( [
-		{ $match: { categoryid	: code  } },
-		{ $group: { _id			: "$subcategoryid",
-					sum_like	: { $sum: "$like" },
-					sum_share	: { $sum: "$share" }, 
-					sum_add		: { $sum: "$add" } 
-				  } 
-		},
-		{ $sort: { _id: 1 } }
-	], function(err,resultSystem){
-		if(err){
-			callback(err,'Can not add log history');
-		} else {
-			callback(null,resultSystem);
-		}
-	});
+exports.getTotalFoodInfo = function(code, callback){
+	switch(Number(code)) {
+		case 4:
+			foodDB.aggregate( [
+				{ $group: { _id			: { meals : "$meals", name_meals : "$name_meals"},
+							sum_like	: { $sum: "$like" },
+							sum_share	: { $sum: "$share" }, 
+							sum_add		: { $sum: "$add" },
+							count		: { $sum: 1 }
+						  } 
+				},
+				{ $sort: { _id: 1 } }
+			], function(err,resultSystem){
+				if(err){
+					callback(err,'Can not add log history');
+				} else {
+					callback(null,resultSystem);
+				}
+			});
+			break;
+		case 5:
+			foodDB.aggregate( [
+				{ $group: { _id			: { cook : "$cook", name_cook : "$name_cook"},
+							sum_like	: { $sum: "$like" },
+							sum_share	: { $sum: "$share" }, 
+							sum_add		: { $sum: "$add" },
+							count		: { $sum: 1 }
+						  } 
+				},
+				{ $sort: { _id: 1 } }
+			], function(err,resultSystem){
+				if(err){
+					callback(err,'Can not add log history');
+				} else {
+					callback(null,resultSystem);
+				}
+			});
+			break;
+		case 6:
+			foodDB.aggregate( [
+				{ $group: { _id			: { age : "$age", name_age : "$name_age"},
+							sum_like	: { $sum: "$like" },
+							sum_share	: { $sum: "$share" }, 
+							sum_add		: { $sum: "$add" },
+							count		: { $sum: 1 }
+						  } 
+				},
+				{ $sort: { _id: 1 } }
+			], function(err,resultSystem){
+				if(err){
+					callback(err,'Can not add log history');
+				} else {
+					callback(null,resultSystem);
+				}
+			});
+			break;
+		case 7:
+			foodDB.aggregate( [
+				{ $group: { _id			: { mainmaterial : "$mainmaterial", name_mainmaterial : "$name_mainmaterial"},
+							sum_like	: { $sum: "$like" },
+							sum_share	: { $sum: "$share" }, 
+							sum_add		: { $sum: "$add" },
+							count		: { $sum: 1 }
+						  } 
+				},
+				{ $sort: { _id: 1 } }
+			], function(err,resultSystem){
+				if(err){
+					callback(err,'Can not add log history');
+				} else {
+					callback(null,resultSystem);
+				}
+			});
+			break;
+	}
 }
 
 //--------------------------------

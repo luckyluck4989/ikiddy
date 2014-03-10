@@ -138,7 +138,8 @@ exports.addNews = function(input, callback){
 									   categoryid		: input.category,
 									   address			: input.categoryname,
 									   subcategoryid	: input.subcategory,
-									   subcategoryname	: input.subcategoryname
+									   subcategoryname	: input.subcategoryname,
+									   image			: input.image
 							} }, function(err,result){
 			if(err)
 				callback(err,'Can not update user');

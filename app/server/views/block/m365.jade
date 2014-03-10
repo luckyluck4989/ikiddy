@@ -26,41 +26,55 @@ block content
 								label.col-sm-3.col-lg-2.control-label Bữa ăn
 								.col-sm-9.col-lg-10.controls
 									select#meals.form-control.chosen.chzn-done(data-placeholder='Choose a category', tabindex='2', style='', name ="meals")
-										option(value='1') Sáng
-										option(value='2') Trưa
-										option(value='3') Xế
-										option(value='4') Tối
+										option(value='41') Sáng
+										option(value='42') Trưa
+										option(value='43') Chiều
+										option(value='44') Tối
 							.form-group
 								label.col-sm-3.col-lg-2.control-label Cách nấu
 								.col-sm-9.col-lg-10.controls
-									input.form-control#cook(type='text', value='', name ="cook", tabindex='3')
+									select#cook.form-control.chosen.chzn-done(data-placeholder='Choose a category', tabindex='3', style='', name ="cook")
+										option(value='51') Bột – Nghiền
+										option(value='52') Cháo
+										option(value='53') Cơm
+										option(value='54') Canh – Soup
+										option(value='55') Các món khác
 							.form-group
 								label.col-sm-3.col-lg-2.control-label Độ tuổi
 								.col-sm-9.col-lg-10.controls
-									input.form-control#age(type='text', value='', name ="age", tabindex='4')
+									select#age.form-control.chosen.chzn-done(data-placeholder='Choose a category', tabindex='4', style='', name ="age")
+										option(value='61') 6-10 tháng
+										option(value='62') 11-18 tháng
+										option(value='63') 19-36 tháng
 							.form-group
 								label.col-sm-3.col-lg-2.control-label Nguyên liệu chính
 								.col-sm-9.col-lg-10.controls
-									input.form-control#mainmaterial(type='text', value='', name ="mainmaterial", tabindex='4')
+									select#mainmaterial.form-control.chosen.chzn-done(data-placeholder='Choose a category', tabindex='5', style='', name ="mainmaterial")
+										option(value='71') Heo
+										option(value='72') Bò
+										option(value='73') Gà
+										option(value='74') Hải sản
+										option(value='75') Rau củ quả
+										option(value='76') Nguyên liệu khác
 							.form-group
 								label.col-sm-3.col-lg-2.control-label Mô tả
 								.col-sm-9.col-lg-10.controls
-									textarea.form-control#description(rows='6', name = "description", tabindex='2')
+									textarea.form-control#description(rows='6', name = "description", tabindex='6')
 							.form-group
 								label.col-sm-3.col-lg-2.control-label Nguyên liệu
 								.col-sm-9.col-lg-10.controls
-									textarea.form-control#material(rows='6', name = "material", tabindex='2')
+									textarea.form-control#material(rows='6', name = "material", tabindex='7')
 							.form-group
 								label.col-sm-3.col-lg-2.control-label Cách làm
 								.col-sm-9.col-lg-10.controls
-									textarea.form-control#method(rows='6', name = "method", tabindex='3')
+									textarea.form-control#method(rows='6', name = "method", tabindex='8')
 							.form-group
 								label.col-sm-3.col-lg-2.control-label
 								.col-sm-9.col-lg-10.controls
 									#imageloadstatus(style='display: none;')
 										img(src='/images/loader.gif', alt='Uploading....')
 									#imageloadbutton
-										input#photoimg(type='file', name='photos[]', multiple='true', tabindex='4')
+										input#photoimg(type='file', name='photos[]', multiple='true', tabindex='9')
 							.form-group
 								label.col-sm-3.col-lg-2.control-label
 								.col-sm-9.col-lg-10.controls
@@ -68,8 +82,8 @@ block content
 							.form-group
 								label.col-sm-3.col-lg-2.control-label
 								.col-sm-9.col-lg-10.controls
-									button.btn.btn-primary(type='submit',id = "btnSave", tabindex='5') Submit
-									button.btn(type='button', id = "btnCancel", tabindex='6') Cancel
+									button.btn.btn-primary(type='submit',id = "btnSave", tabindex='10') Submit
+									button.btn(type='button', id = "btnCancel", tabindex='11') Cancel
 block scripts
 	//script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
 	script(src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places")
