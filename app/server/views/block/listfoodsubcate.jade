@@ -1,0 +1,86 @@
+extends ../layout
+
+block content
+	#main-content
+		.row
+			.col-md-12
+				.box.box-orange
+					.box-title
+						h3
+							select#subcategory.form-control.chosen.chzn-done(data-placeholder='Choose a category', tabindex='2', style='height:33px;')
+								- if (resultJson != undefined && resultJson.subcate != "" && resultJson.subcate == "4")
+									option(value='4', selected=true) Bữa ăn
+								- else
+									option(value='4') Bữa ăn
+								- if (resultJson != undefined && resultJson.subcate != "" && resultJson.subcate == "5")
+									option(value='5', selected=true) Cách nấu
+								- else
+									option(value='5') Cách nấu
+								- if (resultJson != undefined && resultJson.subcate != "" && resultJson.subcate == "6")
+									option(value='6', selected=true) Độ tuổi
+								- else
+									option(value='6') Độ tuổi
+								- if (resultJson != undefined && resultJson.subcate != "" && resultJson.subcate == "7")
+									option(value='7', selected=true) Nguyên liệu chính
+								- else
+									option(value='7') Nguyên liệu chính
+						.box-tool
+							a(data-action="collapse", href="#")
+								i.icon-chevron-up
+							a(data-action="close", href="#")
+								i.icon-remove
+					.box-content(style="min-height:500px")
+						.btn-toolbar.pull-right
+							.btn-group
+								a.btn.btn-circle.show-tooltip(title='', href='/foodsubcate', data-original-title='Thêm mới')
+									i.icon-plus
+							.btn-group
+								a.btn.btn-circle.show-tooltip(title='', href='/listfoodsubcate', data-original-title='Refresh')
+									i.icon-repeat
+						br
+						br
+						.table-responsive
+							table.table.table-advance#foodsubcatetbl
+								thead
+									tr
+										th(style='width:18px')
+										th Tên
+										th Code
+										th(style='display:none;')
+										th.visible-md.visible-lg(style='width:130px') Thao tác
+								tbody
+									if(resultJson.resul !=  null && resultJson.result.length > 0)
+										-	for(var i=0;i<resultJson.result.length;i++)
+											if(i%2 != 0)
+												tr
+													td
+													td
+														a(href='#', class='foodsubcateid')= resultJson.result[i].name
+													td
+														span.label.label-success= resultJson.result[i].code
+													td#rowID(style='display:none;')= resultJson.result[i]._id
+													td.visible-md.visible-lg
+														.btn-group
+															a.btn.btn-sm.show-tooltip(title='', href='#', class='foodsubcateid', data-original-title='Edit')
+																i.icon-edit
+															a.btn.btn-sm.btn-danger.show-tooltip(title='', class='delfoodsubcateid', href='#', data-original-title='Delete')
+																i.icon-trash
+											else
+												tr.table-flag-blue
+													td
+													td
+														a(href='#', class='foodsubcateid')= resultJson.result[i].name
+													td
+														span.label.label-success= resultJson.result[i].code
+													td#rowID(style='display:none;')= resultJson.result[i]._id
+													td.visible-md.visible-lg
+														.btn-group
+															a.btn.btn-sm.show-tooltip(title='', href='#' , class='foodsubcateid', data-original-title='Edit')
+																i.icon-edit
+															a.btn.btn-sm.btn-danger.show-tooltip(title='', href='#', class='delfoodsubcateid', data-original-title='Delete')
+																i.icon-trash
+						.text-center
+							ul.pagination#pagingid
+block scripts
+	script(src='/vendor/jquery.form.js')
+	script(src='/javascripts/listfoodsubcate.js')

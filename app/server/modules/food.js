@@ -353,7 +353,7 @@ exports.getTotalFoodInfo = function(code, callback){
 	switch(Number(code)) {
 		case 4:
 			foodDB.aggregate( [
-				{ $group: { _id			: { meals : "$meals", name_meals : "$name_meals"},
+				{ $group: { _id			: { id : "$meals", title : "$name_meals"},
 							sum_like	: { $sum: "$like" },
 							sum_share	: { $sum: "$share" }, 
 							sum_add		: { $sum: "$add" },
@@ -371,7 +371,7 @@ exports.getTotalFoodInfo = function(code, callback){
 			break;
 		case 5:
 			foodDB.aggregate( [
-				{ $group: { _id			: { cook : "$cook", name_cook : "$name_cook"},
+				{ $group: { _id			: { id : "$cook", title : "$name_cook"},
 							sum_like	: { $sum: "$like" },
 							sum_share	: { $sum: "$share" }, 
 							sum_add		: { $sum: "$add" },
@@ -389,7 +389,7 @@ exports.getTotalFoodInfo = function(code, callback){
 			break;
 		case 6:
 			foodDB.aggregate( [
-				{ $group: { _id			: { age : "$age", name_age : "$name_age"},
+				{ $group: { _id			: { id : "$age", title : "$name_age"},
 							sum_like	: { $sum: "$like" },
 							sum_share	: { $sum: "$share" }, 
 							sum_add		: { $sum: "$add" },
@@ -407,7 +407,7 @@ exports.getTotalFoodInfo = function(code, callback){
 			break;
 		case 7:
 			foodDB.aggregate( [
-				{ $group: { _id			: { mainmaterial : "$mainmaterial", name_mainmaterial : "$name_mainmaterial"},
+				{ $group: { _id			: { id : "$mainmaterial", title : "$name_mainmaterial"},
 							sum_like	: { $sum: "$like" },
 							sum_share	: { $sum: "$share" }, 
 							sum_add		: { $sum: "$add" },

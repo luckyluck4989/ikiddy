@@ -33,6 +33,8 @@ module.exports = {
 		account:db.collection('account'),
 		category:db.collection('category'),
 		subcategory:db.collection('subcategory'),
+		foodcate:db.collection('foodcate'),
+		foodsubcate:db.collection('foodsubcate'),
 		news:db.collection('news'),
 		food:db.collection('food'),
 		videocate:db.collection('videocategory'),
