@@ -1745,7 +1745,7 @@ module.exports = function(app, nodeuuid){
 						return;
 					} else {
 						for(var i = 0; i < retJsonCate.length; i++){
-							if( retJsonCate[i] != undefined && retJsonCate[i] != undefined){
+							if( retJsonCate[i] != undefined && retJson[i] != undefined){
 								retJson[i]._id.image = retJsonCate[i].image;
 							}
 						}
