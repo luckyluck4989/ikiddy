@@ -29,7 +29,14 @@ block content
 							.form-group
 								label.col-sm-3.col-lg-2.control-label Clip Url
 								.col-sm-9.col-lg-10.controls
-									input.form-control#clip(type='text', value='', name ="clip", tabindex='3')
+									#imageloadstatus_clip(style='display: none;')
+										img(src='/images/loader.gif', alt='Uploading....')
+									#imageloadbutton_clip
+										input#clip(type='file', name='clip[]', multiple='true', tabindex='3')
+							.form-group
+								label.col-sm-3.col-lg-2.control-label
+								.col-sm-9.col-lg-10.controls
+									#listClip
 							.form-group
 								label.col-sm-3.col-lg-2.control-label Image
 								.col-sm-9.col-lg-10.controls

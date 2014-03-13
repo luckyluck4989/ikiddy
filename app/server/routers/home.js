@@ -1326,6 +1326,37 @@ module.exports = function(app, nodeuuid){
 				});
 			}
 			res.json(arr,200);
+		} else  if (input.typeSubmit == 'uploadClip'){
+			if (!input.name) {
+				res.json("name must be specified when saving a new article", 400);
+				return;
+			}
+
+			// Upload multi images
+			if(req.files.clip[0].path == undefined){
+				for(var i=0; i < req.files.clip[0].length; i++){
+					// Call function upload images
+					videoModel.addImage(input, req.files.clip[0][i], function (err, objects) {
+						if (err) {
+							res.json(err, 400);
+							return;
+						} else {
+							arr.push(objects);
+						}
+					});
+				}
+			// Upload only one images
+			} else {
+				videoModel.addImage(input, req.files.clip[0], function (err, objects) {
+					if (err) {
+						res.json(err, 400);
+						return;
+					} else {
+						arr.push(objects);
+					}
+				});
+			}
+			res.json(arr,200);
 
 		//--------------------------------
 		// Case: Entry data
