@@ -2,6 +2,7 @@ var accountModel = require('../modules/account')
 var newsModel = require('../modules/news')
 var foodModel = require('../modules/food')
 var videoModel = require('../modules/video')
+var learnModel = require('../modules/learn')
 var videoCateModel = require('../modules/videocate')
 var newsCateModel = require('../modules/newscate')
 var foodSubCateModel = require('../modules/foodsubcate')
@@ -2169,5 +2170,23 @@ module.exports = function(app, nodeuuid){
 				}
 			});
 		}
+	});
+
+	//------------------------------------------------------------------
+	// Get Learn by Category
+	// Return: Learn
+	//------------------------------------------------------------------
+	app.get('/getlearnbycategory',function(req,res){
+		var cateid = req.param('category');
+		learnModel.getAllLearnByCate(cateid, function (err, retJson) {
+			if (err) {
+				var jsonResult = createJsonResult('GetAllLearnByCategory', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+				res.json(jsonResult, 400);
+				return;
+			} else {
+				var jsonResult = createJsonResult('GetAllLearnByCategory', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+				res.json(jsonResult,200);
+			}
+		});
 	});
 };
