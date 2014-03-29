@@ -1,0 +1,82 @@
+extends ../layout
+
+block content
+	#main-content
+		.row
+			.col-md-12
+				.box.box-orange
+					.box-title
+						h3
+							select#subcategory.form-control.chosen.chzn-done(data-placeholder='Choose a category', tabindex='2', style='height:33px;')
+								- if (resultJson != undefined && resultJson.learncate != "" && resultJson.learncate == "1")
+									option(value='1', selected=true) Màu sắc
+								- else
+									option(value='1') Màu sắc
+								- if (resultJson != undefined && resultJson.learncate != "" && resultJson.learncate == "2")
+									option(value='2', selected=true) Đồ vật
+								- else
+									option(value='2') Đồ vật
+								- if (resultJson != undefined && resultJson.learncate != "" && resultJson.learncate == "3")
+									option(value='3', selected=true) Con vật
+								- else
+									option(value='3') Con vật
+						.box-tool
+							a(data-action="collapse", href="#")
+								i.icon-chevron-up
+							a(data-action="close", href="#")
+								i.icon-remove
+					.box-content(style="min-height:500px")
+						.btn-toolbar.pull-right
+							.btn-group
+								a.btn.btn-circle.show-tooltip(title='', href='/learn', data-original-title='Thêm mới')
+									i.icon-plus
+							.btn-group
+								a.btn.btn-circle.show-tooltip(title='', href='/listlearn', data-original-title='Refresh')
+									i.icon-repeat
+						br
+						br
+						.table-responsive
+							table.table.table-advance#learntbl
+								thead
+									tr
+										th(style='width:18px')
+										th Tên tiếng việt
+										th Tên tiếng anh
+										th(style='display:none;')
+										th.visible-md.visible-lg(style='width:130px') Thao tác
+								tbody
+									if(resultJson.resul !=  null && resultJson.result.length > 0)
+										-	for(var i=0;i<resultJson.result.length;i++)
+											if(i%2 != 0)
+												tr
+													td
+													td
+														a(href='#', class='learnid')= resultJson.result[i].name_vn
+													td
+														resultJson.result[i].name_en
+													td#rowID(style='display:none;')= resultJson.result[i]._id
+													td.visible-md.visible-lg
+														.btn-group
+															a.btn.btn-sm.show-tooltip(title='', href='#', class='learnid', data-original-title='Edit')
+																i.icon-edit
+															a.btn.btn-sm.btn-danger.show-tooltip(title='', class='dellearnid', href='#', data-original-title='Delete')
+																i.icon-trash
+											else
+												tr.table-flag-blue
+													td
+													td
+														a(href='#', class='learnid')= resultJson.result[i].name_vn
+													td
+														resultJson.result[i].name_en
+													td#rowID(style='display:none;')= resultJson.result[i]._id
+													td.visible-md.visible-lg
+														.btn-group
+															a.btn.btn-sm.show-tooltip(title='', href='#' , class='learnid', data-original-title='Edit')
+																i.icon-edit
+															a.btn.btn-sm.btn-danger.show-tooltip(title='', href='#', class='dellearnid', data-original-title='Delete')
+																i.icon-trash
+						.text-center
+							ul.pagination#pagingid
+block scripts
+	script(src='/vendor/jquery.form.js')
+	script(src='/javascripts/listlearn.js')

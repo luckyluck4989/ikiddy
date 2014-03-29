@@ -3,6 +3,7 @@ var cnMongoDB = require('../mongodb/connection'),
 				fs = require("fs");
 var MongoDb = require("mongodb");
 var learnDB = cnMongoDB.learn;
+var learncateDB = cnMongoDB.learncate;
 var accountDB = cnMongoDB.account;
 var https = require('https'); //Https module of Node.js
 var FormData = require('form-data'); //Pretty multipart form maker.
@@ -56,22 +57,26 @@ exports.addImage = function(input, image, callback){
 // Param input: List input from screen
 // Param callback: funtion callback
 //--------------------------------
-exports.addLearn = function(input, callback){
-	if(input.learnid == ''){
+exports.addItem = function(input, callback){
+	if(input.itemid == ''){
 		//-----------------------------------------
 		// Define item insert to database
 		//-----------------------------------------
 		var iDate = new Date();
-		var itemEntry = {	name_vn			: "",
-							learncate		: 1,
-							name_en			: "",
-							image			: ""
+		var itemEntry = {	name			: "",
+							image			: "",
+							learncate		: "",
+							clip			: "",
+							down			: 0,
+							like			: 0,
+							share			: 0,
+							adddatetime		: iDate
 						};
   
-		itemEntry.name_vn			= input.name_vn;
-		itemEntry.learncate 		= input.learncate;
-		itemEntry.name_en 			= input.name_en;
+		itemEntry.name				= input.name;
 		itemEntry.image 			= input.image;
+		itemEntry.clip 				= input.clip;
+		itemEntry.learncate 		= input.learncate;
 
 		if (itemEntry._id) {
 			itemEntry._id = new ObjectID(itemEntry._id);
@@ -79,11 +84,11 @@ exports.addLearn = function(input, callback){
 
 		learnDB.save(itemEntry, {safe: true}, callback);
 	} else {
-		learnDB.update( { _id : new ObjectID(input.learnid) }, 
-							{ $set : { name_vn 		: input.name_vn,
-									   learncate 	: input.learncate,
-									   name_en		: input.name_en,
-									   image		: input.image
+		learnDB.update( { _id : new ObjectID(input.itemid) }, 
+							{ $set : { name 		: input.name,
+									   image		: input.image,
+									   clip			: input.clip,
+									   learncate	: input.learncate
 							} }, function(err,result){
 			if(err)
 				callback(err,'Can not update user');
@@ -91,6 +96,19 @@ exports.addLearn = function(input, callback){
 				callback(null,result);
 		});
 	}
+}
+
+//--------------------------------
+// Get list 365 food
+// Param callback: funtion callback
+//--------------------------------
+exports.getAll365Food = function(callback){
+	learnDB.find().sort([['name','asc']]).toArray(function(err,result){
+		if(err)
+			callback(err,'Can not get list location');
+		else
+			callback(null,result);
+	});
 }
 
 //--------------------------------
@@ -121,19 +139,72 @@ exports.getLearnByID = function(learnid, callback){
 }
 
 //--------------------------------
+// Update like, share of food
+// Param learnid: id of food
+// Param callback: funtion callback
+//--------------------------------
+exports.updateLikeShare = function(learnid, like, share, down, callback){
+	learnDB.update({ _id : new ObjectID(learnid) }, 
+				  { $set : { like 	 : Number(like),
+							 share	 : Number(share),
+							 down	 : Number(down)
+						   } 
+				  },
+				  function(err,result){
+		if(err)
+			callback(err,'Can not update comment');
+		else
+			callback(null,result);
+	});
+}
+
+//--------------------------------
+// Count category
+// Param callback: funtion callback
+//--------------------------------
+exports.getTotalLearnInfo = function(callback){
+	learnDB.aggregate( [
+		{ $group: { _id			: "$learncate",
+					total_learn	: { $sum: 1 }
+				  } 
+		},
+		{ $sort: { _id: 1 } }
+	], function(err,resultSystem){
+		if(err){
+			callback(err,'Can not add log history');
+		} else {
+			callback(null,resultSystem);
+		}
+	});
+}
+
+//--------------------------------
 // Get list learn
 // Param page: curent page
 // Param offset: offset setting
 // Param callback: funtion callback
 //--------------------------------
-exports.getListLearn = function(learncate, page, offset, callback){
+exports.getListLearn = function(page, offset, callback){
 	var iSkip = (page - 1) * offset;
 	var iOffset = page * offset;
-	learnDB.find({  "learncate" : learncate }).sort([['_id','desc']]).skip(iSkip).limit(iOffset).toArray(function(err,result){
+	learnDB.find().sort([['name','asc']]).skip(iSkip).limit(iOffset).toArray(function(err,result){
 		if(err)
 			callback(err,'Can not get list location');
-		else
-			callback(null,result);
+		else {
+			learncateDB.find().sort([['name','asc']]).toArray(function(err,learnCateJson){
+				if(err)
+					callback(err,'Can not get list location');
+				else {
+					for(var i = 0; i < learnCateJson.length; i++){
+						for( var j = 0; j < result.length; j++){
+							if(result[j].learncate == learnCateJson[i]._id)
+								result[j].learncate = learnCateJson[i].name;
+						}
+					}
+					callback(null,result);
+				}
+			});
+		}
 	});
 }
 
@@ -141,8 +212,8 @@ exports.getListLearn = function(learncate, page, offset, callback){
 // Get count list learn
 // Param callback: funtion callback
 //--------------------------------
-exports.getCountListLearn = function(learncate, callback){
-	learnDB.count({  "learncate" : learncate }, function(err,result){
+exports.getCountListLearn = function(callback){
+	learnDB.count({}, function(err,result){
 		if(err)
 			callback(err,'Can not get list location');
 		else
@@ -151,13 +222,13 @@ exports.getCountListLearn = function(learncate, callback){
 }
 
 //--------------------------------
-// Delete learn
+// Delete learn cate
 // Param callback: funtion callback
 //--------------------------------
 exports.deleteLearn = function(learnid, callback){
 	learnDB.remove({ _id : new ObjectID(learnid) }, function(err,result){
 		if(err)
-			callback(err,'Can not delete location');
+			callback(err,'Can not delete food');
 		else
 			callback(null,result);
 	});

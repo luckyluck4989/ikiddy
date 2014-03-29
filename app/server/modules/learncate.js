@@ -67,11 +67,13 @@ exports.addItem = function(input, callback){
 							view			: 0,
 							like			: 0,
 							share			: 0,
+							cateid			: '',
 							adddatetime		: iDate
 						};
   
 		itemEntry.name				= input.name;
 		itemEntry.image 			= input.image;
+		itemEntry.cateid			= input.cateid
 
 		if (itemEntry._id) {
 			itemEntry._id = new ObjectID(itemEntry._id);
@@ -81,7 +83,8 @@ exports.addItem = function(input, callback){
 	} else {
 		learncateDB.update( { _id : new ObjectID(input.itemid) }, 
 							{ $set : { name 		: input.name,
-									   image		: input.image
+									   image		: input.image,
+									   cateid		: input.cateid
 							} }, function(err,result){
 			if(err)
 				callback(err,'Can not update user');

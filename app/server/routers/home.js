@@ -2189,4 +2189,190 @@ module.exports = function(app, nodeuuid){
 			}
 		});
 	});
+
+
+	//------------------------------------------------------------------
+	// Get list info new page = 1
+	// Return: render info learn page
+	//------------------------------------------------------------------
+	app.get('/listlearn',function(req,res){
+		if(req.session.user != null){
+			var jsonResult = createJsonResult('GetListLearn', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, null);
+			jsonResult.learncate = req.session.learncate;
+			res.render('block/listlearn', { title: 'List Learn', path : req.path, resultJson : jsonResult });
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get list location by page
+	// Return: list location
+	//------------------------------------------------------------------
+	app.post('/listlearn',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var page = input.page;
+			var learncate = input.learncate;
+			var offset = 10;
+			if(input.learncate == 0)
+				learncate = req.session.learncate;
+			if(input.learncate != 0)
+				req.session.learncate = input.learncate;
+			learnModel.getListLearn(learncate, page, offset, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('GetListLearn', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					learnModel.getCountListLearn(learncate, function (err, retJsonCount) {
+						var jsonResult = createJsonResult('GetListLearn', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+						jsonResult.result2 = retJsonCount;
+						res.json(jsonResult, 200);
+					});
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Set learn to session
+	// Return: list learn
+	//------------------------------------------------------------------
+	app.post('/admlearn',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			req.session.learnid = input.learnid;
+			res.json(req.session.user, 200);
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//--------------------------------
+	// Delete Learn
+	// Return: Delete Learn
+	//--------------------------------
+	app.post('/dellearn',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var learnid = input.learnid;
+			learnModel.deleteLearn(learnid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Delete Learn', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null);
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					var jsonResult = createJsonResult('Delete Learn', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson);
+					res.json(jsonResult,200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Get learn in admin
+	// Return: list learn
+	//------------------------------------------------------------------
+	app.get('/learn',function(req,res){
+		if(req.session.user != null){
+			if(req.session.learnid != null){
+				res.render('block/learn', { title: 'Location', path: req.path, learnid : req.session.learnid });
+			} else {
+				res.render('block/learn', { title: 'Location', path: req.path, learnid : null });
+			}
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// Set location to session
+	// Return: list location
+	//------------------------------------------------------------------
+	app.post('/getadmlearn',function(req,res){
+		if(req.session.user != null){
+			var input = req.body;
+			var learnid = input.learnid;
+			learnModel.getLearnByID(learnid, function (err, retJson) {
+				if (err) {
+					var jsonResult = createJsonResult('Get Learn', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+					res.json(jsonResult, 400);
+					return;
+				} else {
+					req.session.learnid = null;
+					var jsonResult = createJsonResult('Get Learn', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+					res.json(jsonResult, 200);
+				}
+			});
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+	//------------------------------------------------------------------
+	// API
+	// Add learn event
+	// Return: When upload image Then Return list Image Name
+	//------------------------------------------------------------------
+	app.post('/addlearn',function(req,res){
+		//--------------------------------
+		// Define parameter
+		//--------------------------------
+		var arr = [];
+		var input = req.body;
+
+		//--------------------------------
+		// Case: Upload image
+		//--------------------------------
+		if(input.typeSubmit == 'uploadImage'){
+			if (!input.name_vn) {
+				res.json("content must be specified when saving a new article", 400);
+				return;
+			}
+
+			// Upload multi images
+			if(req.files.photos[0].path == undefined){
+				for(var i=0; i < req.files.photos[0].length; i++){
+					// Call function upload images
+					learnModel.addImage(input, req.files.photos[0][i], function (err, objects) {
+						if (err) {
+							res.json(err, 400);
+							return;
+						} else {
+							arr.push(objects);
+						}
+					});
+				}
+			// Upload only one images
+			} else {
+				learnModel.addImage(input, req.files.photos[0], function (err, objects) {
+					if (err) {
+						res.json(err, 400);
+						return;
+					} else {
+						arr.push(objects);
+					}
+				});
+			}
+			res.json(arr,200);
+
+		//--------------------------------
+		// Case: Entry data
+		//--------------------------------
+		} else {
+			learnModel.addLearn(input, function (err, objects) {
+				if (err) {
+					res.json(err, 400);
+					return;
+				} else {
+					res.json("Success",200);
+				}
+			});
+		}
+	});
 };

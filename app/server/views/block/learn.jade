@@ -8,31 +8,38 @@ block content
 					.box-title
 						h3
 							i.icon-file
-							| Edit Learn Category
+							| Edit Learn
 						.box-tool
 							a(data-action="collapse", href="#")
 								i.icon-chevron-up
 							a(data-action="close", href="#")
 								i.icon-remove
 					.box-content
-						form(action="/addlearncate", class="form-horizontal", method="POST", enctype="multipart/form-data", id="addItemForm")
+						form(action="/addlearn", class="form-horizontal", method="POST", enctype="multipart/form-data", id="addNewsForm")
 							.form-group
-								label.col-sm-3.col-lg-2.control-label Tên
+								label.col-sm-3.col-lg-2.control-label Tên tiếng việt
 								.col-sm-9.col-lg-10.controls
-									input.form-control#name(type='text', value='', name ="name", tabindex='1')
+									input.form-control#name_vn(type='text', value='', name ="name_vn", tabindex='1')
 									input.form-control#typeSubmit(style='display:none;', type='text', value='Jack', name ="typeSubmit")
-									input.form-control#itemid(style='display:none;', type='text', value=itemid, name ="itemid")
+									input.form-control#learnid(style='display:none;', type='text', value=learnid, name ="learnid")
 							.form-group
-								label.col-sm-3.col-lg-2.control-label
+								label.col-sm-3.col-lg-2.control-label Tên tiếng anh
 								.col-sm-9.col-lg-10.controls
-									input.form-control#cateid(type='text', value='', name ="cateid", tabindex='2')
+									input.form-control#name_en(type='text', value='', name ="name_en", tabindex='2')
+							.form-group
+								label.col-sm-3.col-lg-2.control-label Danh mục
+								.col-sm-9.col-lg-10.controls
+									select#foodcate.form-control.chosen.chzn-done(data-placeholder='Choose a category', tabindex='3', style='', name ="learncate")
+										option(value='1') Màu sắc
+										option(value='2') Đồ vật
+										option(value='3') Con vật
 							.form-group
 								label.col-sm-3.col-lg-2.control-label
 								.col-sm-9.col-lg-10.controls
 									#imageloadstatus(style='display: none;')
 										img(src='/images/loader.gif', alt='Uploading....')
 									#imageloadbutton
-										input#photoimg(type='file', name='photos[]', multiple='true', tabindex='3')
+										input#photoimg(type='file', name='photos[]', multiple='true', tabindex='4')
 							.form-group
 								label.col-sm-3.col-lg-2.control-label
 								.col-sm-9.col-lg-10.controls
@@ -40,10 +47,10 @@ block content
 							.form-group
 								label.col-sm-3.col-lg-2.control-label
 								.col-sm-9.col-lg-10.controls
-									button.btn.btn-primary(type='submit',id = "btnSave", tabindex='4') Submit
-									button.btn(type='button', id = "btnCancel", tabindex='5') Cancel
+									button.btn.btn-primary(type='submit',id = "btnSave", tabindex='5') Submit
+									button.btn(type='button', id = "btnCancel", tabindex='6') Cancel
 block scripts
 	//script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
 	script(src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places")
 	script(src='/vendor/jquery.form.js')
-	script(src='/javascripts/learncate.js')
+	script(src='/javascripts/learn.js')

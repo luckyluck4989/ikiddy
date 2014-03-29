@@ -9,25 +9,26 @@ var infowindow;
 var oldJson;
 var arrCate,arrSubCate;
 $(document).ready(function() {
-	$("#name").focus();
+	$("#code").focus();
 
 	// Call ajax to get category and subcategory
-	if($("#itemid").val() != ''){
+	if($("#learnid").val() != ''){
 		// Call ajax to get location
-		var input = {"itemid" : $("#itemid").val()};
+		var input = {"learnid" : $("#learnid").val()};
 		$.ajax({
-			url: '/getadmlearncate',
+			url: '/getadmlearn',
 			type: 'POST',
 			data: input,
 			success: function(data){
 				if(data.result){
 					// Draw data
 					oldJson = data.result;
-					$("#name").val(data.result.name);
-					$("#cateid").val(data.result.cateid);
+					$("#learncate").val(data.result.learncate);
+					$("#name_vn").val(data.result.name_vn);
+					$("#name_en").val(data.result.name_en);
 
 					// Draw image
-					var img = '<img width="200px" height="auto" src="'+ data.result.image +'">';
+					var img = '<img width="300px" height="200px" src="'+ data.result.image +'">';
 					$('#listImage').append(img);
 					arrImage[0] = data.result.image;
 				}
@@ -38,7 +39,9 @@ $(document).ready(function() {
 		});
 	} else {
 		// reset location value
-		$("#name").focus();
+		$("#name_vn").focus();
+		$("#name_vn").val('');
+		$("#name_en").val('');
 	}
 
 	// upload image review place
@@ -48,12 +51,12 @@ $(document).ready(function() {
 			return false;
 		} else {
 			$("#typeSubmit").val("entryInfo");
-			$('#addItemForm').ajaxForm({
+			$('#addNewsForm').ajaxForm({
 				beforeSubmit : function(formData, jqForm, options){
 					formData.push({name:"image", value:arrImage[0]});
 				},
 				success	: function(responseText, status, xhr, $form){
-					window.location.href = '/listlearncate';
+					window.location.href = '/listlearn';
 				},
 				error : function(e){
 					alert(e.responseText);
@@ -69,7 +72,7 @@ $(document).ready(function() {
 			var A = $("#imageloadstatus");
 			var B = $("#imageloadbutton");
 
-			$("#addItemForm").ajaxForm({
+			$("#addNewsForm").ajaxForm({
 				beforeSubmit:function(formData, jqForm, options){
 					A.show();
 					B.hide();
@@ -78,7 +81,7 @@ $(document).ready(function() {
 					A.hide();
 					B.show();
 					for(var i =0; i< response.length; i++){
-						var img = '<img src="/upload/'+ response[i] +'">';
+						var img = '<img width="300px" height="200px" src="/upload/'+ response[i] +'">';
 						response[i] = document.location.origin + '/upload/' + response[i];
 						$('#listImage').append(img);
 					}
@@ -96,6 +99,20 @@ $(document).ready(function() {
 
 	// Cancel button click
 	$("#btnCancel").click(function(e){
-		window.location.href = '/listlearncate';
+		window.location.href = '/listlearn';
 	});
 });
+
+function filerCategory(cateid){
+	$('#subcategory')[0].options.length = 0;
+	// Draw data subcategory
+	$.each(arrSubCate, function (i, item) {
+		if(item.categoryid == cateid)
+		{
+			$('#subcategory').append($('<option>', { 
+				value: item.subcategoryid,
+				text : item.subcategoryname 
+			}));
+		}
+	});
+}
