@@ -2375,4 +2375,22 @@ module.exports = function(app, nodeuuid){
 			});
 		}
 	});
+
+	//------------------------------------------------------------------
+	// Get Learn Static
+	// Return: Learn
+	//------------------------------------------------------------------
+	app.get('/getlearnstatic',function(req,res){
+		var cateid = req.param('category');
+		learnModel.getLearnStatic(function (err, retJson) {
+			if (err) {
+				var jsonResult = createJsonResult('GetLearnStatic', METHOD_GET, STATUS_FAIL, SYSTEM_ERR, err, null)
+				res.json(jsonResult, 400);
+				return;
+			} else {
+				var jsonResult = createJsonResult('GetLearnStatic', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)
+				res.json(jsonResult,200);
+			}
+		});
+	});
 };
