@@ -89,7 +89,7 @@ function drawData(dataJson){
 			data: input,
 			success: function(data){
 				if(data){
-					window.location.href = '/news';
+					window.location.href = '/newsch';
 				}
 			},
 			error: function(jqXHR){

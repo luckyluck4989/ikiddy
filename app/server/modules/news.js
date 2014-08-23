@@ -74,6 +74,7 @@ exports.addNews = function(input, callback){
 							add				: 100,
 							share			: 20,
 							image			: "",
+							displayorder	: 0,
 							adddatetime		: iDate
 						};
   
@@ -87,6 +88,7 @@ exports.addNews = function(input, callback){
 		itemEntry.add 				= 0;
 		itemEntry.share 			= 0;
 		itemEntry.image 			= input.image;
+		itemEntry.displayorder 		= input.displayorder == "" ? 0 : input.displayorder;
 
 		if (itemEntry._id) {
 			itemEntry._id = new ObjectID(itemEntry._id);
@@ -133,6 +135,12 @@ exports.addNews = function(input, callback){
 			callback(error,null);
 		});
 	} else {
+		var inputOrder = input.displayorder;
+
+		if (input.displayorder == "") {
+			inputOrder = 0;
+		}
+
 		newsDB.update( { _id : new ObjectID(input.newsid) }, 
 							{ $set : { title 			: input.title,
 									   content 			: input.content,
@@ -140,7 +148,8 @@ exports.addNews = function(input, callback){
 									   address			: input.categoryname,
 									   subcategoryid	: input.subcategory,
 									   subcategoryname	: input.subcategoryname,
-									   image			: input.image
+									   image			: input.image,
+									   displayorder		: inputOrder
 							} }, function(err,result){
 			if(err)
 				callback(err,'Can not update user');
@@ -158,6 +167,14 @@ exports.addNews = function(input, callback){
 exports.getNewsBySub = function(subcate, callback){
 	if (subcate == 21) {
 		newsDB.find({ "subcategoryid" : subcate }).sort([['adddatetime','asc']]).toArray(function(err,result){
+			if(err)
+				callback(err,'Can not get list location');
+			else
+				callback(null,result);
+		});
+	} else if (subcate >= 10 && subcate <= 12) {
+		console.log(subcate);
+		newsDB.find({ "subcategoryid" : subcate }).sort([['displayorder','asc']]).toArray(function(err,result){
 			if(err)
 				callback(err,'Can not get list location');
 			else

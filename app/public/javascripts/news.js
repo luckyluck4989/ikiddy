@@ -10,6 +10,7 @@ var oldJson;
 var arrCate,arrSubCate;
 var currentSubCate;
 $(document).ready(function() {
+
 	$("#title").focus();
 
 	// Call ajax to get category and subcategory

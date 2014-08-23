@@ -896,6 +896,23 @@ module.exports = function(app, nodeuuid){
 	});
 
 	//------------------------------------------------------------------
+	// Get news in admin
+	// Return: list newsch
+	//------------------------------------------------------------------
+	app.get('/newsch',function(req,res){
+		if(req.session.user != null){
+			if(req.session.newsid != null){
+				res.render('block/newsch', { title: 'Location', path: req.path, newsid : req.session.newsid });
+			} else {
+				res.render('block/newsch', { title: 'Location', path: req.path, newsid : null });
+			}
+		} else {
+			res.redirect('/loginad');
+		}
+	});
+
+
+	//------------------------------------------------------------------
 	// Get food in admin
 	// Return: list food
 	//------------------------------------------------------------------
