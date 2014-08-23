@@ -14,7 +14,8 @@ var fql = require('fql');
 // 534081833342710?fields=access_token
 //---------------------------------------------------------------
 //var ACCESS_TOKEN = "CAAICtp62IZBgBAHXmUJTZCDHfCdilbQz6XfZCKPe6j9E70NDyYYhKLsEZBSolZAF6MvZBtzff3WgBfIu4JSBu5iTZCZC3o3m9ZACvTodEZCQ7SNIZCG6PTZAWrBZBMCN7wj1wixbza8p9l51BTdEjv1Dau71zVHlijv0IYsUub47nF1FgWmmgYrzcWKZAdNZBP2ByZBrn6cZD";
-var ACCESS_TOKEN = "CAAICtp62IZBgBAPdJ6Ohck0FhYsmiZCrOs2yZCN0Ai7JH1wNqnZC0tVfCOetqXCY60j3EfGadAK3cljdBgYQrI88qJYjuPz9J8z3tJYR9oOVzWoXfY6SL9akjwXZBwE6xhqA9csNQZCZA42BM7CLdQlD556Y6G5LIdbrLzvXRXhspE3PtVZB3LnZC";
+//var ACCESS_TOKEN = "CAAICtp62IZBgBAPdJ6Ohck0FhYsmiZCrOs2yZCN0Ai7JH1wNqnZC0tVfCOetqXCY60j3EfGadAK3cljdBgYQrI88qJYjuPz9J8z3tJYR9oOVzWoXfY6SL9akjwXZBwE6xhqA9csNQZCZA42BM7CLdQlD556Y6G5LIdbrLzvXRXhspE3PtVZB3LnZC";
+var ACCESS_TOKEN = "CAAU2z6oZAQHABABMItCB6mo6OkS4Ulx269vagOgQEJ9fExZByRjQV6BFXzow8rFdrpZCzf8zZCvCPc9FmzgaZBgRjO0VbuScBVi2x8HW4LgmDBSwkDr96oPJ7YYnDPkAykHnzaX8tndGsnInV7na5uc2zRvlEDCuAeqyQDZBma6fNU2H8cSJT0";
 
 //--------------------------------
 // Function Add Image
@@ -103,7 +104,7 @@ exports.addNews = function(input, callback){
 		var options = {
 			method: 'post',
 			host: 'graph.facebook.com',
-			path: '/534081833342710/photos?access_token=' + ACCESS_TOKEN,
+			path: '/1408625452735550/photos?access_token=' + ACCESS_TOKEN,
 			headers: form.getHeaders(),
 		}
 
@@ -155,12 +156,21 @@ exports.addNews = function(input, callback){
 // Param callback: funtion callback
 //--------------------------------
 exports.getNewsBySub = function(subcate, callback){
-	newsDB.find({ "subcategoryid" : subcate }).toArray(function(err,result){
-		if(err)
-			callback(err,'Can not get list location');
-		else
-			callback(null,result);
-	});
+	if (subcate == 21) {
+		newsDB.find({ "subcategoryid" : subcate }).sort([['adddatetime','asc']]).toArray(function(err,result){
+			if(err)
+				callback(err,'Can not get list location');
+			else
+				callback(null,result);
+		});
+	} else {
+		newsDB.find({ "subcategoryid" : subcate }).toArray(function(err,result){
+			if(err)
+				callback(err,'Can not get list location');
+			else
+				callback(null,result);
+		});
+	}
 }
 
 //--------------------------------

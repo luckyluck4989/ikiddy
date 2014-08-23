@@ -40,6 +40,7 @@ $(document).ready(function() {
 								// Draw data
 								oldJson = data.result;
 								$("#name").val(data.result.name);
+								$("#stream").val(data.result.stream);
 								$("#videocate").val(data.result.videocate);
 
 								// Draw image

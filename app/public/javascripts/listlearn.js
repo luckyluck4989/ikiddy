@@ -61,8 +61,6 @@ function drawData(dataJson){
 		tmpRow += '			<td id="rowID" style="display:none;">' + dataJson[i]._id + '</td>';
 		tmpRow += '			<td class="visible-md visible-lg">'
 		tmpRow += '				<div class="btn-group">'
-		tmpRow += '					<a title="" href="#" data-original-title="Edit" class="btn btn-sm show-tooltip learnid">'
-		tmpRow += '					<i class="icon-edit"></i></a>'
 		tmpRow += '					<a title="" href="#" data-original-title="Delete" class="btn btn-sm btn-danger show-tooltip dellearnid">'
 		tmpRow += '					<i class="icon-trash"></i></a>'
 		tmpRow += '				</div>'

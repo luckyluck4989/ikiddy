@@ -27,12 +27,16 @@ block content
 								.col-sm-9.col-lg-10.controls
 									select#videocate.form-control.chosen.chzn-done(data-placeholder='Choose a category', tabindex='2', style='', name ="videocate")
 							.form-group
+								label.col-sm-3.col-lg-2.control-label Streaming Url
+								.col-sm-9.col-lg-10.controls
+									input.form-control#stream(type='text', value='', name ="stream", tabindex='3')
+							.form-group
 								label.col-sm-3.col-lg-2.control-label Clip Url
 								.col-sm-9.col-lg-10.controls
 									#imageloadstatus_clip(style='display: none;')
 										img(src='/images/loader.gif', alt='Uploading....')
 									#imageloadbutton_clip
-										input#clip(type='file', name='clip[]', multiple='true', tabindex='3')
+										input#clip(type='file', name='clip[]', multiple='true', tabindex='4')
 							.form-group
 								label.col-sm-3.col-lg-2.control-label
 								.col-sm-9.col-lg-10.controls
@@ -43,7 +47,7 @@ block content
 									#imageloadstatus(style='display: none;')
 										img(src='/images/loader.gif', alt='Uploading....')
 									#imageloadbutton
-										input#photoimg(type='file', name='photos[]', multiple='true', tabindex='4')
+										input#photoimg(type='file', name='photos[]', multiple='true', tabindex='5')
 							.form-group
 								label.col-sm-3.col-lg-2.control-label
 								.col-sm-9.col-lg-10.controls
@@ -51,8 +55,8 @@ block content
 							.form-group
 								label.col-sm-3.col-lg-2.control-label
 								.col-sm-9.col-lg-10.controls
-									button.btn.btn-primary(type='submit',id = "btnSave", tabindex='5') Submit
-									button.btn(type='button', id = "btnCancel", tabindex='6') Cancel
+									button.btn.btn-primary(type='submit',id = "btnSave", tabindex='6') Submit
+									button.btn(type='button', id = "btnCancel", tabindex='7') Cancel
 block scripts
 	//script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
 	script(src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places")

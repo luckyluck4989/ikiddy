@@ -13,6 +13,9 @@ $(document).ready(function() {
 
 	// Call ajax to get category and subcategory
 	if($("#learnid").val() != ''){
+		$("#btnSave").hide();
+		$("#btnCancel").prop("class", "btn btn-primary");
+
 		// Call ajax to get location
 		var input = {"learnid" : $("#learnid").val()};
 		$.ajax({

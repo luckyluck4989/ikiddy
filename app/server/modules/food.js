@@ -14,7 +14,8 @@ var fql = require('fql');
 // 534081833342710?fields=access_token
 //---------------------------------------------------------------
 //var ACCESS_TOKEN = "CAAICtp62IZBgBAHXmUJTZCDHfCdilbQz6XfZCKPe6j9E70NDyYYhKLsEZBSolZAF6MvZBtzff3WgBfIu4JSBu5iTZCZC3o3m9ZACvTodEZCQ7SNIZCG6PTZAWrBZBMCN7wj1wixbza8p9l51BTdEjv1Dau71zVHlijv0IYsUub47nF1FgWmmgYrzcWKZAdNZBP2ByZBrn6cZD";
-var ACCESS_TOKEN = "CAAICtp62IZBgBAPdJ6Ohck0FhYsmiZCrOs2yZCN0Ai7JH1wNqnZC0tVfCOetqXCY60j3EfGadAK3cljdBgYQrI88qJYjuPz9J8z3tJYR9oOVzWoXfY6SL9akjwXZBwE6xhqA9csNQZCZA42BM7CLdQlD556Y6G5LIdbrLzvXRXhspE3PtVZB3LnZC";
+//var ACCESS_TOKEN = "CAAICtp62IZBgBAPdJ6Ohck0FhYsmiZCrOs2yZCN0Ai7JH1wNqnZC0tVfCOetqXCY60j3EfGadAK3cljdBgYQrI88qJYjuPz9J8z3tJYR9oOVzWoXfY6SL9akjwXZBwE6xhqA9csNQZCZA42BM7CLdQlD556Y6G5LIdbrLzvXRXhspE3PtVZB3LnZC";
+var ACCESS_TOKEN = "CAAU2z6oZAQHABAE84ZA0LzVo0BuRdbAFZBgMRwGwZAcEcEz5kqsBsdw2ovc0mZBRGkNKab7DL6WbF3zaYbeP81xL86vpOQpZAuDpwldNZAnAnZA77eZC5u73nCGbHGNrqsxsz6uRHvNb44eeZC1ZC0ZCXNBcrJHgkLlKf1WjsGkc5VnAcN0qZC1JXRSp0";
 
 //--------------------------------
 // Function Add Image
@@ -157,7 +158,7 @@ exports.addItem = function(input, callback){
 		var options = {
 			method: 'post',
 			host: 'graph.facebook.com',
-			path: '/534081833342710/photos?access_token=' + ACCESS_TOKEN,
+			path: '/1408625452735550/photos?access_token=' + ACCESS_TOKEN,
 			headers: form.getHeaders(),
 		}
 
@@ -211,7 +212,7 @@ exports.addItem = function(input, callback){
 				break;
 			case '54': nameCook = "Canh – Soup";
 				break;
-			case '54': nameCook = "Các món khác";
+			case '55': nameCook = "Các món khác";
 				break;
 		}
 
