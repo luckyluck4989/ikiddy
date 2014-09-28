@@ -53,21 +53,21 @@ block content
 										option(value='71') Heo
 										option(value='72') Bò
 										option(value='73') Gà
-										option(value='74') Hải sản
+										option(value='74') Thủy hải sản
 										option(value='75') Rau củ quả
 										option(value='76') Nguyên liệu khác
 							.form-group
 								label.col-sm-3.col-lg-2.control-label Mô tả
 								.col-sm-9.col-lg-10.controls
-									textarea.form-control#description(rows='6', name = "description", tabindex='6')
+									textarea.form-control#description(rows='6', tabindex='6', class="ckeditor", name="description")
 							.form-group
 								label.col-sm-3.col-lg-2.control-label Nguyên liệu
 								.col-sm-9.col-lg-10.controls
-									textarea.form-control#material(rows='6', name = "material", tabindex='7')
+									textarea.form-control#material(rows='6', tabindex='7', class="ckeditor", name="material")
 							.form-group
 								label.col-sm-3.col-lg-2.control-label Cách làm
 								.col-sm-9.col-lg-10.controls
-									textarea.form-control#method(rows='6', name = "method", tabindex='8')
+									textarea.form-control#method(rows='6', tabindex='8', class="ckeditor", name="method")
 							.form-group
 								label.col-sm-3.col-lg-2.control-label
 								.col-sm-9.col-lg-10.controls
@@ -89,7 +89,7 @@ block content
 									button.btn.btn-primary(type='submit',id = "btnSave", tabindex='10') Submit
 									button.btn(type='button', id = "btnCancel", tabindex='11') Cancel
 block scripts
-	//script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+	script(src='/plugin/ckeditor/ckeditor.js')
 	script(src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places")
 	script(src='/vendor/jquery.form.js')
 	script(src='/javascripts/m365.js')

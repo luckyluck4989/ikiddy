@@ -8,21 +8,14 @@ var autocomplete;
 var infowindow;
 var oldJson;
 var arrCate,arrSubCate;
-var editor1;
-var editor2;
-var editor3;
+var currentSubCate;
+var editor;
 $(document).ready(function() {
 	// Show editor
 	// The instanceReady event is fired, when an instance of CKEditor has finished
 	// its initialization.
 	CKEDITOR.on( 'instanceReady', function( ev ) {
-		if (ev.editor.name == 'material') {
-			editor1 = ev.editor;
-		} else if (ev.editor.name == 'method') {
-			editor2 = ev.editor;
-		} else {
-			editor3 = ev.editor;
-		}
+		editor = ev.editor;
 
 		// Event fired when the readOnly property changes.
 		editor.on( 'readOnly', function() {
@@ -40,33 +33,49 @@ $(document).ready(function() {
 		data: '',
 		success: function(data){
 			if(data.result){
+				$('#category')[0].options.length = 0;
+				// Draw data category
+				$.each(data.result, function (i, item) {
+					$('#category').append($('<option>', { 
+						value: item.categoryid,
+						text : item.categoryname 
+					}));
+				});
+				arrCate = data.result;
+				currentSubCate = data.subcate;
 
-				if($("#itemid").val() != ''){
+				$('#subcategory')[0].options.length = 0;
+				// Draw data subcategory
+				/*
+				$.each(data.resultsub, function (i, item) {
+					$('#subcategory').append($('<option>', { 
+						value: item.subcategoryid,
+						text : item.subcategoryname 
+					}));
+				});
+				*/
+				arrSubCate = data.resultsub;
+
+				if($("#newsid").val() != ''){
 					// Call ajax to get location
-					var input = {"itemid" : $("#itemid").val()};
+					var input = {"newsid" : $("#newsid").val()};
 					$.ajax({
-						url: '/getadmm365',
+						url: '/getadmnews',
 						type: 'POST',
 						data: input,
 						success: function(data){
 							if(data.result){
 								// Draw data
 								oldJson = data.result;
-								$("#name").val(data.result.name);
-								//$("#material").val(data.result.materials);
-								//$("#method").val(data.result.method);
-								$("#meals").val(data.result.meals);
-								$("#cook").val(data.result.cook);
-								$("#age").val(data.result.age);
-								$("#mainmaterial").val(data.result.mainmaterial);
-								//$("#description").val(data.result.description);
-								editor1.insertHtml(data.result.materials);
-								editor2.insertHtml(data.result.method);
-								editor3.insertHtml(data.result.description);
-								
+								$("#title").val(data.result.title);
+								$("#category").val(data.result.categoryid);
+								filerCategory(data.result.categoryid);
+								$("#subcategory").val(data.result.subcategoryid);
+								//$("#content").val(data.result.content);
+								editor.insertHtml(data.result.content);
 
 								// Draw image
-								var img = '<img width="300px" height="200px" src="'+ data.result.image +'">';
+								var img = '<img width="200px" height="auto" src="'+ data.result.image +'">';
 								$('#listImage').append(img);
 								arrImage[0] = data.result.image;
 							}
@@ -77,15 +86,21 @@ $(document).ready(function() {
 					});
 				} else {
 					// reset location value
-					$("#name").focus();
-					$("#material").val('');
-					$("#method").val('');
+					$("#title").focus();
+					$("#title").val('');
+					$("#content").val('');
 				}
 			}
 		},
 		error : function(e){
 			alert(e.responseText);
 		}
+	});
+
+	// select category change
+	$("#category").change(function(){
+		var myselect = document.getElementById("category");
+		filerCategory(myselect.options[myselect.selectedIndex].value);
 	});
 
 	// upload image review place
@@ -95,12 +110,20 @@ $(document).ready(function() {
 			return false;
 		} else {
 			$("#typeSubmit").val("entryInfo");
-			$('#addItemForm').ajaxForm({
+			$('#addNewsForm').ajaxForm({
 				beforeSubmit : function(formData, jqForm, options){
 					formData.push({name:"image", value:arrImage[0]});
+					formData.push({name:"categoryname", value:$("#category option:selected").text()});
+					formData.push({name:"subcategoryname", value:$("#subcategory option:selected").text()});
 				},
 				success	: function(responseText, status, xhr, $form){
-					window.location.href = '/listm365';
+					if (currentSubCate >= 30) {
+						window.location.href = '/listnewtips';
+					} else if (currentSubCate >= 20) {
+						window.location.href = '/listnewdd';
+					} else {
+						window.location.href = '/listnewsch';
+					}
 				},
 				error : function(e){
 					alert(e.responseText);
@@ -116,7 +139,7 @@ $(document).ready(function() {
 			var A = $("#imageloadstatus");
 			var B = $("#imageloadbutton");
 
-			$("#addItemForm").ajaxForm({
+			$("#addNewsForm").ajaxForm({
 				beforeSubmit:function(formData, jqForm, options){
 					A.show();
 					B.hide();
@@ -125,7 +148,7 @@ $(document).ready(function() {
 					A.hide();
 					B.show();
 					for(var i =0; i< response.length; i++){
-						var img = '<img width="300px" height="200px" src="/upload/'+ response[i] +'">';
+						var img = '<img src="/upload/'+ response[i] +'">';
 						response[i] = document.location.origin + '/upload/' + response[i];
 						$('#listImage').append(img);
 					}
@@ -143,6 +166,26 @@ $(document).ready(function() {
 
 	// Cancel button click
 	$("#btnCancel").click(function(e){
-		window.location.href = '/listm365';
+		if (currentSubCate >= 30) {
+			window.location.href = '/listnewtips';
+		} else if (currentSubCate >= 20) {
+			window.location.href = '/listnewdd';
+		} else {
+			window.location.href = '/listnewsch';
+		}
 	});
 });
+
+function filerCategory(cateid){
+	$('#subcategory')[0].options.length = 0;
+	// Draw data subcategory
+	$.each(arrSubCate, function (i, item) {
+		if(item.categoryid == cateid)
+		{
+			$('#subcategory').append($('<option>', { 
+				value: item.subcategoryid,
+				text : item.subcategoryname 
+			}));
+		}
+	});
+}

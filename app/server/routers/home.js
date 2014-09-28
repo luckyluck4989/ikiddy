@@ -902,15 +902,30 @@ module.exports = function(app, nodeuuid){
 	app.get('/newsch',function(req,res){
 		if(req.session.user != null){
 			if(req.session.newsid != null){
-				res.render('block/newsch', { title: 'Location', path: req.path, newsid : req.session.newsid });
+				res.render('block/newsch', { title: 'News', path: req.path, newsid : req.session.newsid });
 			} else {
-				res.render('block/newsch', { title: 'Location', path: req.path, newsid : null });
+				res.render('block/newsch', { title: 'News', path: req.path, newsid : null });
 			}
 		} else {
 			res.redirect('/loginad');
 		}
 	});
 
+	//------------------------------------------------------------------
+	// Get news in admin
+	// Return: list newsch
+	//------------------------------------------------------------------
+	app.get('/newtips',function(req,res){
+		if(req.session.user != null){
+			if(req.session.newsid != null){
+				res.render('block/newtips', { title: 'Tips', path: req.path, newsid : req.session.newsid });
+			} else {
+				res.render('block/newtips', { title: 'Tips', path: req.path, newsid : null });
+			}
+		} else {
+			res.redirect('/loginad');
+		}
+	});
 
 	//------------------------------------------------------------------
 	// Get food in admin
@@ -1796,6 +1811,7 @@ module.exports = function(app, nodeuuid){
 						for(var i = 0; i < retJsonCate.length; i++){
 							if( retJsonCate[i] != undefined && retJson[i] != undefined){
 								retJson[i]._id.image = retJsonCate[i].image;
+								retJson[i]._id.title = retJsonCate[i].name;
 							}
 						}
 						var jsonResult = createJsonResult('GetTotalNewsInfo', METHOD_GET, STATUS_SUCESS, SYSTEM_SUC, null, retJson)

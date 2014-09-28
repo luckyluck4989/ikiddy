@@ -101,7 +101,6 @@ function drawData(dataJson){
 		return false;
 	});
 }
-
 //-------------------------------
 // Split Page
 //-------------------------------
@@ -139,7 +138,13 @@ function splitPage(total){
 
 			$("#pagingid").append('<li> <a href="#" id="' + ipage + '"> Last </a> </li>');
 			$("#pagingid").append('<li> <a href="#" id="next"> → </a> </li>');
-			$($('#pagingid  li')[idActive + 1]).addClass('active')
+			//$($('#pagingid  li')[idActive + 1]).addClass('active');
+			var padingHtml = $('#pagingid  li');
+			for (var i = 0; i < padingHtml.length; i++) {
+				if ($(padingHtml[i]).find("a").attr("id") == idActive.toString()) {
+					$($('#pagingid  li')[i]).addClass('active');
+				}
+			}
 		}
 	}
 
@@ -160,7 +165,13 @@ function splitPage(total){
 
 		// Set active 
 		$('#pagingid  li.active').removeClass('active')
-		$($('#pagingid  li')[idActive + 1]).addClass('active')
+		//$($('#pagingid  li')[idActive + 1]).addClass('active')
+		var padingHtml = $('#pagingid  li');
+		for (var i = 0; i < padingHtml.length; i++) {
+			if ($(padingHtml[i]).find("a").attr("id") == idActive.toString()) {
+				$($('#pagingid  li')[i]).addClass('active');
+			}
+		}
 
 		// Call ajax to get data by page
 		curPage = idActive;

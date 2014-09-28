@@ -114,7 +114,7 @@ exports.addItem = function(input, callback){
 				break;
 			case '54': itemEntry.name_cook = "Canh – Soup";
 				break;
-			case '54': itemEntry.name_cook = "Các món khác";
+			case '55': itemEntry.name_cook = "Các món khác";
 				break;
 		}
 
@@ -134,7 +134,7 @@ exports.addItem = function(input, callback){
 				break;
 			case '73': itemEntry.name_mainmaterial = "Gà";
 				break;
-			case '74': itemEntry.name_mainmaterial = "Hải sản";
+			case '74': itemEntry.name_mainmaterial = "Thủy hải sản";
 				break;
 			case '75': itemEntry.name_mainmaterial = "Rau củ quả";
 				break;
@@ -232,7 +232,7 @@ exports.addItem = function(input, callback){
 				break;
 			case '73': nameMainMaterial = "Gà";
 				break;
-			case '74': nameMainMaterial = "Hải sản";
+			case '74': nameMainMaterial = "Thủy hải sản";
 				break;
 			case '75': nameMainMaterial = "Rau củ quả";
 				break;
@@ -354,7 +354,7 @@ exports.getTotalFoodInfo = function(code, callback){
 	switch(Number(code)) {
 		case 4:
 			foodDB.aggregate( [
-				{ $group: { _id			: { id : "$meals", title : "$name_meals"},
+				{ $group: { _id			: { id : "$meals"},
 							sum_like	: { $sum: "$like" },
 							sum_share	: { $sum: "$share" }, 
 							sum_add		: { $sum: "$add" },
@@ -372,7 +372,7 @@ exports.getTotalFoodInfo = function(code, callback){
 			break;
 		case 5:
 			foodDB.aggregate( [
-				{ $group: { _id			: { id : "$cook", title : "$name_cook"},
+				{ $group: { _id			: { id : "$cook"},
 							sum_like	: { $sum: "$like" },
 							sum_share	: { $sum: "$share" }, 
 							sum_add		: { $sum: "$add" },
@@ -390,7 +390,7 @@ exports.getTotalFoodInfo = function(code, callback){
 			break;
 		case 6:
 			foodDB.aggregate( [
-				{ $group: { _id			: { id : "$age", title : "$name_age"},
+				{ $group: { _id			: { id : "$age"},
 							sum_like	: { $sum: "$like" },
 							sum_share	: { $sum: "$share" }, 
 							sum_add		: { $sum: "$add" },
@@ -408,7 +408,7 @@ exports.getTotalFoodInfo = function(code, callback){
 			break;
 		case 7:
 			foodDB.aggregate( [
-				{ $group: { _id			: { id : "$mainmaterial", title : "$name_mainmaterial"},
+				{ $group: { _id			: { id : "$mainmaterial"},
 							sum_like	: { $sum: "$like" },
 							sum_share	: { $sum: "$share" }, 
 							sum_add		: { $sum: "$add" },
@@ -435,7 +435,7 @@ exports.getTotalFoodInfo = function(code, callback){
 //--------------------------------
 exports.getList365Food = function(page, offset, callback){
 	var iSkip = (page - 1) * offset;
-	var iOffset = page * offset;
+	var iOffset = 10;
 	foodDB.find().sort([['_id','desc']]).skip(iSkip).limit(iOffset).toArray(function(err,result){
 		if(err)
 			callback(err,'Can not get list location');
